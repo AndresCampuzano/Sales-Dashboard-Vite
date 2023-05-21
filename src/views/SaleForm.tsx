@@ -327,7 +327,9 @@ export const SaleForm = () => {
                         color={'inherit'}
                         startIcon={<AddIcon />}
                         size={'medium'}
-                        onClick={() => onOpenExitModal('/dashboard/client')}
+                        onClick={() =>
+                           onOpenExitModal('/dashboard/client-form')
+                        }
                         fullWidth
                      >
                         Crear nuevo
@@ -343,7 +345,9 @@ export const SaleForm = () => {
                               onClick={() => {
                                  const id = selectedClientInfo?._id;
                                  if (!id) return;
-                                 onOpenExitModal(`/dashboard/client?id=${id}`);
+                                 onOpenExitModal(
+                                    `/dashboard/client-form?id=${id}`
+                                 );
                               }}
                               fullWidth
                            >
@@ -497,7 +501,7 @@ export const SaleForm = () => {
                         color={'inherit'}
                         startIcon={<AddIcon />}
                         size={'medium'}
-                        onClick={() => onOpenExitModal('dashboard/item')}
+                        onClick={() => onOpenExitModal('dashboard/item-form')}
                         fullWidth
                      >
                         Crear nuevo
@@ -513,7 +517,9 @@ export const SaleForm = () => {
                               onClick={() => {
                                  const id = selectedItemInfo?._id;
                                  if (!id) return;
-                                 onOpenExitModal(`/dashboard/item?id=${id}`);
+                                 onOpenExitModal(
+                                    `/dashboard/item-form?id=${id}`
+                                 );
                               }}
                               fullWidth
                            >
