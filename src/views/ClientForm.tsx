@@ -1,7 +1,7 @@
 export const ClientForm = () => {
-    return (
-        <>
-            <h1>ClientForm</h1>
-        </>
-    )
-}
+   return (
+      <>
+         <h1>ClientForm</h1>
+      </>
+   );
+};

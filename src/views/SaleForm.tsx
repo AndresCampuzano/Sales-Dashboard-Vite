@@ -1,7 +1,7 @@
 export const SaleForm = () => {
-    return (
-        <>
-            <h1>SaleForm</h1>
-        </>
-    )
-}
+   return (
+      <>
+         <h1>SaleForm</h1>
+      </>
+   );
+};
