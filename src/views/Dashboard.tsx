@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
    Box,
    Button,
@@ -15,15 +15,14 @@ import { SaleWithClientAndItemData } from '../types/types.ts';
 export const Dashboard = () => {
    const navigate = useNavigate();
    const [loading, setLoading] = useState<boolean>(false);
-   const [sales, setSales] = useState<SaleWithClientAndItemData[]>([]);
+   const [_, setSales] = useState<SaleWithClientAndItemData[]>([]);
 
    useEffect(() => {
       const fetchData = async () => {
          setLoading(true);
          try {
-            const sales = await getSales();
-            setSales(sales);
-            console.log(sales);
+            const data = await getSales();
+            setSales(data);
          } catch (error) {
             console.error(error);
          } finally {
