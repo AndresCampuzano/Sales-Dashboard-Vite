@@ -3,7 +3,14 @@ import { SalesDataTable, SaleWithClientAndItemData } from '../types/types.ts';
 export const prepareDataSales = (
    data: SaleWithClientAndItemData[]
 ): SalesDataTable[] => {
-   return data.map((sale) => ({
+   // Sorting by date
+   const sortedArray = data.sort(
+      (a, b) =>
+         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+   );
+
+   // Mapping data
+   return sortedArray.map((sale) => ({
       id: sale._id,
       avatarItems: sale.items.map((item, index) => ({
          id: index,
