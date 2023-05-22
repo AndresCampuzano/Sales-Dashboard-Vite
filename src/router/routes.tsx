@@ -26,12 +26,12 @@ export const router = createBrowserRouter([
             element: <SaleForm />,
          },
          {
-            path: '/dashboard/client-form',
-            element: <ClientForm />,
-         },
-         {
             path: '/dashboard/item-form',
             element: <ItemForm />,
+         },
+         {
+            path: '/dashboard/client-form',
+            element: <ClientForm />,
          },
       ],
    },

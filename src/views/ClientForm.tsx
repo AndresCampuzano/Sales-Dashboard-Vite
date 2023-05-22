@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useSearchParams, useRouter } from 'next/navigation';
 import {
    Box,
    Breadcrumbs,
@@ -40,7 +39,6 @@ export const ClientForm = () => {
    const [address, setAddress] = useState<string>('');
    const [city, setCity] = useState<string>('');
    const [phone, setPhone] = useState<string>('');
-   const [country, setCountry] = useState<string>('CO');
 
    const [searchParams] = useSearchParams();
    const id = searchParams.get('id');
@@ -76,7 +74,6 @@ export const ClientForm = () => {
             setAddress(data.address);
             setCity(data.city);
             setPhone(data.phone.toString());
-            setCountry(data.country);
          } catch (e) {
             console.error(e);
          } finally {
@@ -94,7 +91,8 @@ export const ClientForm = () => {
          name.trim().length > 0 &&
          instagramAccount.trim().length > 0 &&
          address.trim().length > 0 &&
-         phone.trim().length > 0
+         phone.trim().length > 0 &&
+         city.trim().length > 0
       ) {
          setIsBtnValid(true);
       } else {
@@ -133,14 +131,12 @@ export const ClientForm = () => {
          instagram_account: instagramAccount,
          address,
          phone: parseInt(phone),
-         country,
          city,
       };
 
       try {
          setIsSendingData(true);
-         if (isEditing) {
-            if (!originalClient?._id) return;
+         if (isEditing && originalClient?._id) {
             await updateClient(originalClient?._id, data);
          } else {
             await postClient(data);
@@ -157,10 +153,14 @@ export const ClientForm = () => {
       if (!originalClient?._id) return;
 
       try {
+         setIsSendingData(true);
          await deleteClient(originalClient._id);
          navigate('/dashboard/sale-form');
       } catch (e) {
          console.error(e);
+      } finally {
+         setIsSendingData(false);
+         setShowDeleteModal(false);
       }
    };
 

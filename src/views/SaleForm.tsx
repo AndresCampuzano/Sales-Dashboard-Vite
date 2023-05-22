@@ -501,7 +501,7 @@ export const SaleForm = () => {
                         color={'inherit'}
                         startIcon={<AddIcon />}
                         size={'medium'}
-                        onClick={() => onOpenExitModal('dashboard/item-form')}
+                        onClick={() => onOpenExitModal('/dashboard/item-form')}
                         fullWidth
                      >
                         Crear nuevo
