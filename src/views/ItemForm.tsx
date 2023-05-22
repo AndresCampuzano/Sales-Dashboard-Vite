@@ -268,7 +268,6 @@ export const ItemForm = () => {
                            multiple
                            id='colors-autocomplete'
                            options={COLORS.map((x) => ({ label: x.label }))}
-                           getOptionLabel={(option) => option.label}
                            value={availableColors}
                            filterSelectedOptions
                            onChange={(_, value) => {

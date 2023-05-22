@@ -41,7 +41,6 @@ export const ClientForm = () => {
    const [address, setAddress] = useState<string>('');
    const [phone, setPhone] = useState<string>('');
    // Departments and cities
-   const [departmentsOptions, setDepartmentsOptions] = useState<string[]>([]);
    const [selectedDepartment, setSelectedDepartment] = useState<string>('');
    const [departmentInputValue, setDepartmentInputValue] = useState<string>('');
    const [citiesOptions, setCitiesOptions] = useState<string[]>([]);
@@ -52,6 +51,8 @@ export const ClientForm = () => {
    const id = searchParams.get('id');
 
    const navigate = useNavigate();
+
+   const departmentOptions = CO_PLACES.map((place) => place.department);
 
    /**
     * Fetch client by id from API
@@ -80,8 +81,8 @@ export const ClientForm = () => {
             setName(data.name);
             setInstagramAccount(data.instagram_account);
             setAddress(data.address);
-            setSelectedCity(data.city);
             setSelectedDepartment(data.department);
+            setSelectedCity(data.city);
             setPhone(data.phone.toString());
          } catch (e) {
             console.error(e);
@@ -91,16 +92,6 @@ export const ClientForm = () => {
       };
       fetchData();
    }, [id]);
-
-   /**
-    * Loads departments options
-    */
-   useEffect(() => {
-      const options = CO_PLACES.map((place) => place.department);
-      setDepartmentsOptions(options);
-      if (isEditing) return;
-      setSelectedDepartment(options[1]);
-   }, [isEditing]);
 
    /**
     * Loads cities options based on selected department
@@ -302,7 +293,7 @@ export const ClientForm = () => {
                               <TextField {...params} label='Departamento' />
                            )}
                            size={'small'}
-                           options={departmentsOptions}
+                           options={departmentOptions}
                         />
                         <Box mt={2} />
                         <Autocomplete
