@@ -138,6 +138,7 @@ const Row = (props: { row: SalesDataTable }) => {
                               <TableCell>Dirección</TableCell>
                               <TableCell>Teléfono</TableCell>
                               <TableCell>Ciudad</TableCell>
+                              <TableCell>Departamento</TableCell>
                            </TableRow>
                         </TableHead>
                         <TableBody>
@@ -159,6 +160,9 @@ const Row = (props: { row: SalesDataTable }) => {
                               </TableCell>
                               <TableCell>
                                  {row.nestedTableData.nestedClient.city}
+                              </TableCell>
+                              <TableCell>
+                                 {row.nestedTableData.nestedClient.department}
                               </TableCell>
                            </TableRow>
                         </TableBody>

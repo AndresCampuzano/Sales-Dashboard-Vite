@@ -98,8 +98,9 @@ export const ClientForm = () => {
    useEffect(() => {
       const options = CO_PLACES.map((place) => place.department);
       setDepartmentsOptions(options);
+      if (isEditing) return;
       setSelectedDepartment(options[1]);
-   }, []);
+   }, [isEditing]);
 
    /**
     * Loads cities options based on selected department
@@ -111,7 +112,10 @@ export const ClientForm = () => {
       const selectedDepartmentObj = CO_PLACES.find(
          (place) => place.department === selectedDepartment
       );
-      if (!selectedDepartmentObj) return;
+
+      if (!selectedDepartmentObj) {
+         throw new Error('Department not found');
+      }
 
       const options = selectedDepartmentObj.cities;
       setCitiesOptions(options);
@@ -134,7 +138,14 @@ export const ClientForm = () => {
       } else {
          setIsBtnValid(false);
       }
-   }, [name, instagramAccount, address, phone]);
+   }, [
+      name,
+      instagramAccount,
+      address,
+      phone,
+      selectedDepartment,
+      selectedCity,
+   ]);
 
    const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
