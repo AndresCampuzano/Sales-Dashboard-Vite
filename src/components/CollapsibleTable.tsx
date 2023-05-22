@@ -136,7 +136,7 @@ const Row = (props: { row: SalesDataTable }) => {
                               <TableCell>Nombre</TableCell>
                               <TableCell>Instagram</TableCell>
                               <TableCell>Dirección</TableCell>
-                              <TableCell>Telefono</TableCell>
+                              <TableCell>Teléfono</TableCell>
                               <TableCell>Ciudad</TableCell>
                            </TableRow>
                         </TableHead>

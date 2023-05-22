@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
+   Autocomplete,
    Box,
    Breadcrumbs,
    Button,
@@ -25,6 +26,7 @@ import {
    updateClient,
 } from '../services/client.service';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { CO_PLACES } from '../constants/constants.ts';
 
 export const ClientForm = () => {
    const [loading, setLoading] = useState<boolean>(true);
@@ -37,8 +39,14 @@ export const ClientForm = () => {
    const [name, setName] = useState<string>('');
    const [instagramAccount, setInstagramAccount] = useState<string>('');
    const [address, setAddress] = useState<string>('');
-   const [city, setCity] = useState<string>('');
    const [phone, setPhone] = useState<string>('');
+   // Departments and cities
+   const [departmentsOptions, setDepartmentsOptions] = useState<string[]>([]);
+   const [selectedDepartment, setSelectedDepartment] = useState<string>('');
+   const [departmentInputValue, setDepartmentInputValue] = useState<string>('');
+   const [citiesOptions, setCitiesOptions] = useState<string[]>([]);
+   const [selectedCity, setSelectedCity] = useState<string>('');
+   const [cityInputValue, setCityInputValue] = useState<string>('');
 
    const [searchParams] = useSearchParams();
    const id = searchParams.get('id');
@@ -72,7 +80,8 @@ export const ClientForm = () => {
             setName(data.name);
             setInstagramAccount(data.instagram_account);
             setAddress(data.address);
-            setCity(data.city);
+            setSelectedCity(data.city);
+            setSelectedDepartment(data.department);
             setPhone(data.phone.toString());
          } catch (e) {
             console.error(e);
@@ -84,6 +93,32 @@ export const ClientForm = () => {
    }, [id]);
 
    /**
+    * Loads departments options
+    */
+   useEffect(() => {
+      const options = CO_PLACES.map((place) => place.department);
+      setDepartmentsOptions(options);
+      setSelectedDepartment(options[1]);
+   }, []);
+
+   /**
+    * Loads cities options based on selected department
+    */
+   useEffect(() => {
+      if (!selectedDepartment) return;
+      setSelectedCity('');
+
+      const selectedDepartmentObj = CO_PLACES.find(
+         (place) => place.department === selectedDepartment
+      );
+      if (!selectedDepartmentObj) return;
+
+      const options = selectedDepartmentObj.cities;
+      setCitiesOptions(options);
+      setSelectedCity(options[0]);
+   }, [selectedDepartment]);
+
+   /**
     * Validate if all fields are filled
     */
    useEffect(() => {
@@ -92,13 +127,14 @@ export const ClientForm = () => {
          instagramAccount.trim().length > 0 &&
          address.trim().length > 0 &&
          phone.trim().length > 0 &&
-         city.trim().length > 0
+         selectedDepartment.trim().length > 0 &&
+         selectedCity.trim().length > 0
       ) {
          setIsBtnValid(true);
       } else {
          setIsBtnValid(false);
       }
-   }, [name, instagramAccount, address, phone, city]);
+   }, [name, instagramAccount, address, phone]);
 
    const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
@@ -114,10 +150,6 @@ export const ClientForm = () => {
       setAddress(e.target.value);
    };
 
-   const onChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setCity(e.target.value);
-   };
-
    const onChangePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
       setPhone(e.target.value);
    };
@@ -131,7 +163,8 @@ export const ClientForm = () => {
          instagram_account: instagramAccount,
          address,
          phone: parseInt(phone),
-         city,
+         department: selectedDepartment,
+         city: selectedCity,
       };
 
       try {
@@ -241,17 +274,47 @@ export const ClientForm = () => {
                            required
                         />
                         <Box mt={2} />
-                        <TextField
-                           id='outlined-basic'
-                           label='Ciudad'
-                           variant={'outlined'}
-                           size={'small'}
-                           value={city}
-                           onChange={onChangeCity}
+                        <Autocomplete
+                           disablePortal
+                           disableClearable
+                           id='combo-box-departments'
+                           value={selectedDepartment}
+                           onChange={(_: any, newValue: string) => {
+                              setSelectedDepartment(newValue);
+                           }}
+                           inputValue={departmentInputValue}
+                           onInputChange={(_, newInputValue) => {
+                              setDepartmentInputValue(newInputValue);
+                           }}
                            fullWidth
-                           required
+                           renderInput={(params) => (
+                              <TextField {...params} label='Departamento' />
+                           )}
+                           size={'small'}
+                           options={departmentsOptions}
                         />
                         <Box mt={2} />
+                        <Autocomplete
+                           disablePortal
+                           disableClearable
+                           id='combo-box-cities'
+                           value={selectedCity}
+                           onChange={(_: any, newValue: string) => {
+                              setSelectedCity(newValue);
+                           }}
+                           inputValue={cityInputValue}
+                           onInputChange={(_, newInputValue) => {
+                              setCityInputValue(newInputValue);
+                           }}
+                           fullWidth
+                           renderInput={(params) => (
+                              <TextField {...params} label='Ciudad' />
+                           )}
+                           size={'small'}
+                           options={citiesOptions}
+                        />
+                        <Box mt={2} />
+
                         <TextField
                            id='outlined-basic'
                            label='Teléfono'

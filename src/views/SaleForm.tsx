@@ -358,70 +358,67 @@ export const SaleForm = () => {
                      <Box mt={2} />
                      {selectedClientInfo ? (
                         <>
-                           <Stack direction='row' spacing={3}>
-                              <Box width={220}>
-                                 <TextField
-                                    id='outlined-basic'
-                                    label='Nombre del cliente'
-                                    variant={'outlined'}
-                                    size={'small'}
-                                    value={selectedClientInfo?.name || ''}
-                                    fullWidth={true}
-                                    disabled={true}
-                                 />
-                              </Box>
-                              <Box width={220}>
-                                 <TextField
-                                    id='outlined-basic'
-                                    label='Cuenta de instagram'
-                                    variant={'outlined'}
-                                    size={'small'}
-                                    value={
-                                       selectedClientInfo?.instagram_account ||
-                                       ''
-                                    }
-                                    fullWidth={true}
-                                    disabled={true}
-                                 />
-                              </Box>
-                           </Stack>
+                           <TextField
+                              id='outlined-basic'
+                              label='Nombre del cliente'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={selectedClientInfo?.name || ''}
+                              fullWidth={true}
+                              disabled={true}
+                           />
                            <Box mt={2} />
-                           <Stack direction='row' spacing={3}>
-                              <Box width={220}>
-                                 <TextField
-                                    id='outlined-basic'
-                                    label='Dirección'
-                                    variant={'outlined'}
-                                    size={'small'}
-                                    value={selectedClientInfo?.address || ''}
-                                    fullWidth={true}
-                                    disabled={true}
-                                 />
-                              </Box>
-                              <Box width={220}>
-                                 <TextField
-                                    id='outlined-basic'
-                                    label='Ciudad'
-                                    variant={'outlined'}
-                                    size={'small'}
-                                    value={selectedClientInfo?.city || ''}
-                                    fullWidth={true}
-                                    disabled={true}
-                                 />
-                              </Box>
-                           </Stack>
+                           <TextField
+                              id='outlined-basic'
+                              label='Cuenta de instagram'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={
+                                 selectedClientInfo?.instagram_account || ''
+                              }
+                              fullWidth={true}
+                              disabled={true}
+                           />
                            <Box mt={2} />
-                           <Box width={220}>
-                              <TextField
-                                 id='outlined-basic'
-                                 label='Telefono'
-                                 variant={'outlined'}
-                                 size={'small'}
-                                 value={selectedClientInfo?.phone || ''}
-                                 fullWidth={true}
-                                 disabled={true}
-                              />
-                           </Box>
+                           <TextField
+                              id='outlined-basic'
+                              label='Dirección'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={selectedClientInfo?.address || ''}
+                              fullWidth={true}
+                              disabled={true}
+                           />
+                           <Box mt={2} />
+                           <TextField
+                              id='outlined-basic'
+                              label='Ciudad'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={selectedClientInfo?.city || ''}
+                              fullWidth={true}
+                              disabled={true}
+                           />
+                           <Box mt={2} />
+                           <TextField
+                              id='outlined-basic'
+                              label='Teléfono'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={selectedClientInfo?.phone || ''}
+                              fullWidth={true}
+                              disabled={true}
+                           />
+                           <Box mt={2} />
+                           <TextField
+                              id='outlined-basic'
+                              label='Departamento'
+                              variant={'outlined'}
+                              size={'small'}
+                              value={selectedClientInfo?.department || ''}
+                              fullWidth={true}
+                              disabled={true}
+                           />
                         </>
                      ) : null}
                      <Box mt={3} />
