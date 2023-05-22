@@ -98,7 +98,7 @@ export const ClientForm = () => {
       } else {
          setIsBtnValid(false);
       }
-   }, [name, instagramAccount, address, phone]);
+   }, [name, instagramAccount, address, phone, city]);
 
    const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);

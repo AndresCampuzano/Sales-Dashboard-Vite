@@ -1,4 +1,12 @@
-import { Sale } from '../types/types';
+import { Sale, SaleWithClientAndItemData } from '../types/types';
+
+/**
+ * Gets all Sales
+ */
+export async function getSales(): Promise<SaleWithClientAndItemData[]> {
+   const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sales`);
+   return await response.json();
+}
 
 /**
  * Posts a Sale
