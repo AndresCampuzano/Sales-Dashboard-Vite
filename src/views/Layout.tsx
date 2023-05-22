@@ -17,7 +17,9 @@ export const Layout = () => {
 
    return (
       <>
-         <button onClick={handleLogOut}>Cerrar session</button>
+         <nav>
+            <button onClick={handleLogOut}>Cerrar session</button>
+         </nav>
          <Outlet />
       </>
    );

@@ -11,6 +11,7 @@ export interface AuthStateContext {
    handleLoginWithEmail: (email: string, password: string) => Promise<void>;
    handleLogOut: () => Promise<void>;
 }
+
 const initialState: Pick<AuthStateContext, 'status' | 'userId'> = {
    userId: null,
    status: 'checking',
