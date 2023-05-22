@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/authContext.tsx';
 import { useNavigate } from 'react-router-dom';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 export const Home = () => {
    const { handleLoginWithEmail } = useContext(AuthContext);
@@ -47,22 +49,52 @@ export const Home = () => {
 
    return (
       <>
-         <h1>HOME</h1>
-         <form className='loginForm' onSubmit={handleSubmit}>
-            <input
-               placeholder='email'
-               type='email'
-               onChange={(e) => setEmail(e.target.value)}
-               required={true}
-            ></input>
-            <input
-               placeholder='password'
-               type='password'
-               onChange={(e) => setPassword(e.target.value)}
-               required={true}
-            ></input>
-            <button type={'submit'}>Login</button>
-         </form>
+         <Container>
+            <Box mt={12} />
+            <Typography variant='h3'>Iniciar Sesión</Typography>
+            <Box mt={6} />
+            <form className='loginForm' onSubmit={handleSubmit}>
+               <Box width={'100%'} maxWidth={'500px'}>
+                  <TextField
+                     id='email'
+                     label='Email'
+                     variant={'outlined'}
+                     size={'small'}
+                     type={'email'}
+                     value={email}
+                     onChange={(e) => setEmail(e.target.value)}
+                     fullWidth
+                     required
+                  />
+                  <Box mt={2} />
+                  <TextField
+                     id='password'
+                     label='Contraseña'
+                     variant={'outlined'}
+                     size={'small'}
+                     type={'password'}
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
+                     fullWidth
+                     required
+                  />
+                  <Box mt={3} />
+                  <Button
+                     variant='contained'
+                     color={'primary'}
+                     startIcon={<SendIcon />}
+                     size={'medium'}
+                     type={'submit'}
+                     disabled={
+                        email.trim().length === 0 ||
+                        password.trim().length === 0
+                     }
+                  >
+                     Ingresar
+                  </Button>
+               </Box>
+            </form>
+         </Container>
       </>
    );
 };
