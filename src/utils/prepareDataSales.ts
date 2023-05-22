@@ -16,7 +16,7 @@ export const prepareDataSales = (
       totalProducts: sale.items.length,
       totalPrice: sale.items.reduce((acc, item) => acc + (item?.price || 0), 0),
       city: sale.client.city,
-      date: sale.client.created_at || new Date(),
+      date: sale.created_at as string,
       nestedTableData: {
          nestedItems: sale.items.map((item, index) => ({
             id: index,

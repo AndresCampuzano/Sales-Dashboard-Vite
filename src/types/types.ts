@@ -5,8 +5,8 @@ export interface Client {
    address: string;
    city: string;
    phone: number;
-   created_at?: Date;
-   updated_at?: Date;
+   created_at?: string;
+   updated_at?: string;
 }
 
 export interface Item {
@@ -15,8 +15,8 @@ export interface Item {
    price: number;
    image: string;
    available_colors: string[];
-   created_at?: Date;
-   updated_at?: Date;
+   created_at?: string;
+   updated_at?: string;
 }
 
 export interface Sale {
@@ -26,8 +26,8 @@ export interface Sale {
       item_id: string;
       color: string;
    }[];
-   created_at?: Date;
-   updated_at?: Date;
+   created_at?: string;
+   updated_at?: string;
 }
 
 export interface SaleWithClientAndItemData {
@@ -40,8 +40,8 @@ export interface SaleWithClientAndItemData {
       price: number;
    }[];
    original_items: Item[];
-   created_at?: Date;
-   updated_at?: Date;
+   created_at?: string;
+   updated_at?: string;
 }
 
 export interface SalesDataTable {
@@ -54,7 +54,7 @@ export interface SalesDataTable {
    totalProducts: number;
    totalPrice: number;
    city: string;
-   date: Date;
+   date: string;
    nestedTableData: {
       nestedItems: {
          id: number;

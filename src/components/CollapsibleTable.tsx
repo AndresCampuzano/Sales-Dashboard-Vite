@@ -67,10 +67,20 @@ const Row = (props: { row: SalesDataTable }) => {
             <TableCell>{numberFormat(row.totalPrice)}</TableCell>
             <TableCell>{row.city}</TableCell>
             <TableCell>
-               {row.date.toString()} -{' '}
-               {DateTime.fromISO(
-                  row.date as unknown as string
-               ).toLocaleString()}
+               <div style={{ textAlign: 'center', width: 'fit-content' }}>
+                  <p style={{ margin: 0 }}>
+                     {DateTime.fromISO(row.date)
+                        .setLocale('es')
+                        .toFormat('cccc dd LLL H:mm a')}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                     (
+                     {DateTime.fromISO(row.date, {}).toRelative({
+                        locale: 'es',
+                     })}
+                     )
+                  </p>
+               </div>
             </TableCell>
          </TableRow>
          <TableRow>
