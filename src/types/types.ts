@@ -33,14 +33,34 @@ export interface Sale {
 export interface SaleWithClientAndItemData {
    _id: string;
    client_id: string;
-   client: Client & {
-      created_at: Date;
-   };
+   client: Client;
    items: {
       item_id: string;
       color: string;
-   };
-   original_items: Item[] & {
-      created_at: Date;
+   }[];
+   original_items: Item[];
+}
+
+export interface SalesDataTable {
+   id: string;
+   avatarItems: {
+      id: number;
+      image_src: string;
+      name: string;
+   }[];
+   totalProducts: number;
+   totalPrice: number;
+   city: string;
+   date: Date;
+   nestedTableData: {
+      nestedItems: {
+         id: number;
+         item_id: string;
+         name: string;
+         image_src: string;
+         color: string;
+         price: number;
+      }[];
+      nestedClient: Client;
    };
 }

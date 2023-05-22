@@ -1,0 +1,44 @@
+import { SalesDataTable, SaleWithClientAndItemData } from '../types/types.ts';
+
+export const prepareDataSales = (
+   data: SaleWithClientAndItemData[]
+): SalesDataTable[] => {
+   return data.map((sale) => ({
+      id: sale._id,
+      avatarItems: sale.items.map((item, index) => ({
+         id: index,
+         image_src:
+            sale.original_items.find((x) => x._id === item.item_id)?.image ||
+            '',
+         name:
+            sale.original_items.find((x) => x._id === item.item_id)?.name || '',
+      })),
+      totalProducts: sale.items.length,
+      totalPrice: sale.items.reduce(
+         (acc, item) =>
+            acc +
+            (sale.original_items.find((x) => x._id === item.item_id)?.price ||
+               0),
+         0
+      ),
+      city: sale.client.city,
+      date: sale.client.created_at || new Date(),
+      nestedTableData: {
+         nestedItems: sale.items.map((item, index) => ({
+            id: index,
+            item_id: item.item_id,
+            name:
+               sale.original_items.find((x) => x._id === item.item_id)?.name ||
+               '',
+            image_src:
+               sale.original_items.find((x) => x._id === item.item_id)?.image ||
+               '',
+            color: item.color,
+            price:
+               sale.original_items.find((x) => x._id === item.item_id)?.price ||
+               0,
+         })),
+         nestedClient: sale.client,
+      },
+   }));
+};
