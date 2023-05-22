@@ -14,13 +14,7 @@ export const prepareDataSales = (
             sale.original_items.find((x) => x._id === item.item_id)?.name || '',
       })),
       totalProducts: sale.items.length,
-      totalPrice: sale.items.reduce(
-         (acc, item) =>
-            acc +
-            (sale.original_items.find((x) => x._id === item.item_id)?.price ||
-               0),
-         0
-      ),
+      totalPrice: sale.items.reduce((acc, item) => acc + (item?.price || 0), 0),
       city: sale.client.city,
       date: sale.client.created_at || new Date(),
       nestedTableData: {
@@ -34,9 +28,7 @@ export const prepareDataSales = (
                sale.original_items.find((x) => x._id === item.item_id)?.image ||
                '',
             color: item.color,
-            price:
-               sale.original_items.find((x) => x._id === item.item_id)?.price ||
-               0,
+            price: item.price || 0,
          })),
          nestedClient: sale.client,
       },

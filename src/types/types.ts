@@ -37,8 +37,11 @@ export interface SaleWithClientAndItemData {
    items: {
       item_id: string;
       color: string;
+      price: number;
    }[];
    original_items: Item[];
+   created_at?: Date;
+   updated_at?: Date;
 }
 
 export interface SalesDataTable {

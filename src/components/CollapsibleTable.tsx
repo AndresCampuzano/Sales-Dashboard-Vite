@@ -13,6 +13,8 @@ import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import { SalesDataTable } from '../types/types.ts';
 import { numberFormat } from '../utils/numberFormat.ts';
+import { CustomChip } from './CustomChip.tsx';
+import { DateTime } from 'luxon';
 
 export const CollapsibleTable = ({ data }: { data: SalesDataTable[] }) => {
    return (
@@ -22,10 +24,10 @@ export const CollapsibleTable = ({ data }: { data: SalesDataTable[] }) => {
                <TableRow>
                   <TableCell />
                   <TableCell>Productos</TableCell>
-                  <TableCell align='right'>Total #</TableCell>
-                  <TableCell align='right'>Total $</TableCell>
-                  <TableCell align='right'>Ciudad</TableCell>
-                  <TableCell align='right'>Fecha</TableCell>
+                  <TableCell>Total #</TableCell>
+                  <TableCell>Total $</TableCell>
+                  <TableCell>Ciudad</TableCell>
+                  <TableCell>Fecha</TableCell>
                </TableRow>
             </TableHead>
             <TableBody>
@@ -55,16 +57,21 @@ const Row = (props: { row: SalesDataTable }) => {
                </IconButton>
             </TableCell>
             <TableCell component='th' scope='row'>
-               <AvatarGroup max={4}>
+               <AvatarGroup max={3}>
                   {row.avatarItems.map((i) => (
                      <Avatar key={i.id} alt={i.name} src={i.image_src} />
                   ))}
                </AvatarGroup>
             </TableCell>
-            <TableCell align='right'>{row.totalProducts}</TableCell>
-            <TableCell align='right'>{numberFormat(row.totalPrice)}</TableCell>
-            <TableCell align='right'>{row.city}</TableCell>
-            <TableCell align='right'>{row.date.toString()}</TableCell>
+            <TableCell>{row.totalProducts}</TableCell>
+            <TableCell>{numberFormat(row.totalPrice)}</TableCell>
+            <TableCell>{row.city}</TableCell>
+            <TableCell>
+               {row.date.toString()} -{' '}
+               {DateTime.fromISO(
+                  row.date as unknown as string
+               ).toLocaleString()}
+            </TableCell>
          </TableRow>
          <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -78,14 +85,18 @@ const Row = (props: { row: SalesDataTable }) => {
                            <TableRow>
                               <TableCell>Productos</TableCell>
                               <TableCell>Nombre</TableCell>
-                              <TableCell align='right'>Color</TableCell>
-                              <TableCell align='right'>Precio</TableCell>
+                              <TableCell>Color</TableCell>
+                              <TableCell>Precio</TableCell>
                            </TableRow>
                         </TableHead>
                         <TableBody>
                            {row.nestedTableData.nestedItems.map((item) => (
                               <TableRow key={item.id}>
-                                 <TableCell component='th' scope='row'>
+                                 <TableCell
+                                    component='th'
+                                    scope='row'
+                                    align={'right'}
+                                 >
                                     <Avatar
                                        key={item.id}
                                        alt={item.name}
@@ -93,10 +104,10 @@ const Row = (props: { row: SalesDataTable }) => {
                                     />
                                  </TableCell>
                                  <TableCell>{item.name}</TableCell>
-                                 <TableCell align='right'>
-                                    {item.color}
+                                 <TableCell>
+                                    <CustomChip color={item.color} />
                                  </TableCell>
-                                 <TableCell align='right'>
+                                 <TableCell>
                                     {numberFormat(item.price)}
                                  </TableCell>
                               </TableRow>
@@ -114,9 +125,9 @@ const Row = (props: { row: SalesDataTable }) => {
                            <TableRow>
                               <TableCell>Nombre</TableCell>
                               <TableCell>Instagram</TableCell>
-                              <TableCell align='right'>Dirección</TableCell>
-                              <TableCell align='right'>Telefono</TableCell>
-                              <TableCell align='right'>Ciudad</TableCell>
+                              <TableCell>Dirección</TableCell>
+                              <TableCell>Telefono</TableCell>
+                              <TableCell>Ciudad</TableCell>
                            </TableRow>
                         </TableHead>
                         <TableBody>
@@ -130,13 +141,13 @@ const Row = (props: { row: SalesDataTable }) => {
                                        .instagram_account
                                  }
                               </TableCell>
-                              <TableCell align='right'>
+                              <TableCell>
                                  {row.nestedTableData.nestedClient.address}
                               </TableCell>
-                              <TableCell align='right'>
+                              <TableCell>
                                  {row.nestedTableData.nestedClient.phone}
                               </TableCell>
-                              <TableCell align='right'>
+                              <TableCell>
                                  {row.nestedTableData.nestedClient.city}
                               </TableCell>
                            </TableRow>

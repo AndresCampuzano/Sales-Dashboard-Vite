@@ -21,7 +21,6 @@ import {
    CardActions,
    CardContent,
    CardMedia,
-   Chip,
    Dialog,
    DialogActions,
    DialogContent,
@@ -34,11 +33,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import SendIcon from '@mui/icons-material/Send';
 import { Client, Item, Sale } from '../types/types';
 import { Link, useNavigate } from 'react-router-dom';
-import { colorFromConstants } from '../utils/colorFromConstants';
 import { numberFormat } from '../utils/numberFormat';
 import { getClients } from '../services/client.service';
 import { getItems } from '../services/item.service';
 import { postSale } from '../services/sale.service';
+import { CustomChip } from '../components/CustomChip.tsx';
 
 export const SaleForm = () => {
    const [loading, setLoading] = useState<boolean>(true);
@@ -172,6 +171,7 @@ export const SaleForm = () => {
          items: itemList.map((item) => ({
             item_id: item._id as string,
             color: item.color,
+            price: item.price,
          })),
       };
 
@@ -446,17 +446,7 @@ export const SaleForm = () => {
                                  >
                                     {item.name}
                                  </Typography>
-                                 <Chip
-                                    label={item.color}
-                                    color={'primary'}
-                                    style={{
-                                       backgroundColor: colorFromConstants(
-                                          item.color
-                                       ).bgColor,
-                                       color: colorFromConstants(item.color)
-                                          .textColor,
-                                    }}
-                                 />
+                                 <CustomChip color={item.color} />
                               </CardContent>
                               <CardActions>
                                  <Button
@@ -680,16 +670,7 @@ export const SaleForm = () => {
                   <br />
                   {itemList.map((item, index) => (
                      <li key={index}>
-                        {item.name} -{' '}
-                        <Chip
-                           label={item.color}
-                           color={'primary'}
-                           style={{
-                              backgroundColor: colorFromConstants(item.color)
-                                 .bgColor,
-                              color: colorFromConstants(item.color).textColor,
-                           }}
-                        />
+                        {item.name} - <CustomChip color={item.color} />
                      </li>
                   ))}
                   <br />
