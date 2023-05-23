@@ -39,7 +39,7 @@ export const ClientForm = () => {
    const [name, setName] = useState<string>('');
    const [instagramAccount, setInstagramAccount] = useState<string>('');
    const [address, setAddress] = useState<string>('');
-   const [phone, setPhone] = useState<string>('');
+   const [phone, setPhone] = useState<number>(0);
    // Departments and cities
    const [selectedDepartment, setSelectedDepartment] = useState<string>('');
    const [departmentInputValue, setDepartmentInputValue] = useState<string>('');
@@ -83,7 +83,7 @@ export const ClientForm = () => {
             setAddress(data.address);
             setSelectedDepartment(data.department);
             setSelectedCity(data.city);
-            setPhone(data.phone.toString());
+            setPhone(data.phone);
          } catch (e) {
             console.error(e);
          } finally {
@@ -121,7 +121,7 @@ export const ClientForm = () => {
          name.trim().length > 0 &&
          instagramAccount.trim().length > 0 &&
          address.trim().length > 0 &&
-         phone.trim().length > 0 &&
+         phone > 0 &&
          selectedDepartment.trim().length > 0 &&
          selectedCity.trim().length > 0
       ) {
@@ -153,7 +153,12 @@ export const ClientForm = () => {
    };
 
    const onChangePhone = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setPhone(e.target.value);
+      // Sets the phone to 0 if the input is empty
+      if (e.target.value.length === 0) {
+         setPhone(0);
+      } else {
+         setPhone(parseInt(e.target.value));
+      }
    };
 
    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -164,7 +169,7 @@ export const ClientForm = () => {
          name,
          instagram_account: instagramAccount,
          address,
-         phone: parseInt(phone),
+         phone: phone,
          department: selectedDepartment,
          city: selectedCity,
       };
@@ -323,6 +328,7 @@ export const ClientForm = () => {
                            variant={'outlined'}
                            size={'small'}
                            value={phone}
+                           type={'number'}
                            onChange={onChangePhone}
                            fullWidth
                            required

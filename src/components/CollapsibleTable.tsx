@@ -57,7 +57,7 @@ const Row = (props: { row: SalesDataTable }) => {
                </IconButton>
             </TableCell>
             <TableCell component='th' scope='row'>
-               <AvatarGroup max={3}>
+               <AvatarGroup max={4}>
                   {row.avatarItems.map((i) => (
                      <Avatar key={i.id} alt={i.name} src={i.image_src} />
                   ))}
