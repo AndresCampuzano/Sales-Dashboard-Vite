@@ -20,6 +20,7 @@ export const prepareDataSales = (
          name:
             sale.original_items.find((x) => x._id === item.item_id)?.name || '',
       })),
+      clientName: sale.client.name,
       totalProducts: sale.items.length,
       totalPrice: sale.items.reduce((acc, item) => acc + (item?.price || 0), 0),
       city: sale.client.city,

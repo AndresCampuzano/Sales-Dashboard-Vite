@@ -52,6 +52,7 @@ export interface SalesDataTable {
       image_src: string;
       name: string;
    }[];
+   clientName: string;
    totalProducts: number;
    totalPrice: number;
    city: string;

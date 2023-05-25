@@ -24,7 +24,7 @@ export const CollapsibleTable = ({ data }: { data: SalesDataTable[] }) => {
                <TableRow>
                   <TableCell />
                   <TableCell>Productos</TableCell>
-                  <TableCell>Total #</TableCell>
+                  <TableCell>Cliente</TableCell>
                   <TableCell>Total $</TableCell>
                   <TableCell>Ciudad</TableCell>
                   <TableCell>Fecha</TableCell>
@@ -63,7 +63,7 @@ const Row = (props: { row: SalesDataTable }) => {
                   ))}
                </AvatarGroup>
             </TableCell>
-            <TableCell>{row.totalProducts}</TableCell>
+            <TableCell>{row.clientName}</TableCell>
             <TableCell>{numberFormat(row.totalPrice)}</TableCell>
             <TableCell>{row.city}</TableCell>
             <TableCell>
@@ -71,7 +71,7 @@ const Row = (props: { row: SalesDataTable }) => {
                   <p style={{ margin: 0 }}>
                      {DateTime.fromISO(row.date)
                         .setLocale('es')
-                        .toFormat('cccc dd LLL H:mm a')}
+                        .toFormat('cccc dd LLL')}
                   </p>
                   <p style={{ margin: 0 }}>
                      (
