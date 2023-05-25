@@ -41,6 +41,7 @@ export interface SaleWithClientAndItemData {
       price: number;
    }[];
    original_items: Item[];
+   total_sales: Sale[];
    created_at: string;
    updated_at?: string;
 }
@@ -57,6 +58,7 @@ export interface SalesDataTable {
    totalPrice: number;
    city: string;
    date: string;
+   isRecurrence?: boolean;
    nestedTableData: {
       nestedItems: {
          id: number;

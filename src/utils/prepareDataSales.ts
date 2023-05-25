@@ -25,6 +25,7 @@ export const prepareDataSales = (
       totalPrice: sale.items.reduce((acc, item) => acc + (item?.price || 0), 0),
       city: sale.client.city,
       date: sale.created_at as string,
+      isRecurrence: sale.total_sales.length > 1,
       nestedTableData: {
          nestedItems: sale.items.map((item, index) => ({
             id: index,

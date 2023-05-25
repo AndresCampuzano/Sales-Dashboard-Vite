@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Collapse from '@mui/material/Collapse';
-import { Avatar, AvatarGroup, Box, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Chip, Typography } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
@@ -63,7 +63,12 @@ const Row = (props: { row: SalesDataTable }) => {
                   ))}
                </AvatarGroup>
             </TableCell>
-            <TableCell>{row.clientName}</TableCell>
+            <TableCell>
+               {row.clientName}
+               {row.isRecurrence && (
+                  <Chip label='Recurrente' size='small' color={'success'} />
+               )}
+            </TableCell>
             <TableCell>{numberFormat(row.totalPrice)}</TableCell>
             <TableCell>{row.city}</TableCell>
             <TableCell>
