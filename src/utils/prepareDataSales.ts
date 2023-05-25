@@ -26,6 +26,7 @@ export const prepareDataSales = (
       city: sale.client.city,
       date: sale.created_at as string,
       isRecurrence: sale.total_sales.length > 1,
+      totalSales: sale.total_sales,
       nestedTableData: {
          nestedItems: sale.items.map((item, index) => ({
             id: index,

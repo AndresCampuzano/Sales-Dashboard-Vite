@@ -66,7 +66,11 @@ const Row = (props: { row: SalesDataTable }) => {
             <TableCell>
                {row.clientName}
                {row.isRecurrence && (
-                  <Chip label='Recurrente' size='small' color={'success'} />
+                  <Chip
+                     label={`Recurrente (${row.totalSales.length})`}
+                     size='small'
+                     color={'success'}
+                  />
                )}
             </TableCell>
             <TableCell>{numberFormat(row.totalPrice)}</TableCell>

@@ -59,6 +59,7 @@ export interface SalesDataTable {
    city: string;
    date: string;
    isRecurrence?: boolean;
+   totalSales: Sale[];
    nestedTableData: {
       nestedItems: {
          id: number;
