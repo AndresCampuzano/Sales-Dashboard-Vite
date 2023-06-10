@@ -156,10 +156,18 @@ const Row = (props: { row: SalesDataTable }) => {
                                  {row.nestedTableData.nestedClient.name}
                               </TableCell>
                               <TableCell>
-                                 {
-                                    row.nestedTableData.nestedClient
-                                       .instagram_account
-                                 }
+                                 {/*instagram link*/}
+                                 <a
+                                    href={`https://www.instagram.com/${row.nestedTableData.nestedClient.instagram_account}`}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                 >
+                                    @
+                                    {
+                                       row.nestedTableData.nestedClient
+                                          .instagram_account
+                                    }
+                                 </a>
                               </TableCell>
                               <TableCell>
                                  {row.nestedTableData.nestedClient.address}
