@@ -34,6 +34,10 @@ export const COLORS = [
       color: '#52302a',
    },
    {
+      label: 'Naranja',
+      color: '#e07c10',
+   },
+   {
       label: 'Otro',
       color: '#a6a6a6',
       textColor: '#ffffff',
