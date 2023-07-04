@@ -72,3 +72,9 @@ export interface SalesDataTable {
       nestedClient: Client;
    };
 }
+
+export interface MonthlySalesInterface {
+   month: string;
+   allItems: SalesDataTable[];
+   revenue: number;
+}

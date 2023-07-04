@@ -12,10 +12,11 @@ import { getSales } from '../services/sale.service.ts';
 import { CollapsibleTable } from '../components/CollapsibleTable.tsx';
 import { SalesDataTable } from '../types/types.ts';
 import { prepareDataSales } from '../utils/prepareDataSales.ts';
+import { MonthlySales } from '../components/MonthlySales.tsx';
 
 export const Dashboard = () => {
    const navigate = useNavigate();
-   const [loading, setLoading] = useState<boolean>(false);
+   const [loading, setLoading] = useState<boolean>(true);
    const [sales, setSales] = useState<SalesDataTable[]>([]);
 
    useEffect(() => {
@@ -39,15 +40,14 @@ export const Dashboard = () => {
             <Box mt={6} />
             <Typography variant='h3'>Panel</Typography>
             <Box mt={6} />
-            <Typography variant='h4'>Total de Ventas</Typography>
-            <Box mt={1} />
-            <Divider variant='fullWidth' />
+
             <Box mt={3} />
             <Button
                variant='contained'
                color={'primary'}
                size={'medium'}
                onClick={() => navigate('/dashboard/sale-form')}
+               disabled={loading}
             >
                Nueva Venta
             </Button>
@@ -58,6 +58,16 @@ export const Dashboard = () => {
                </>
             ) : (
                <>
+                  <Typography variant='h4'>Ventas por meses</Typography>
+                  <Box mt={1} />
+                  <Divider variant='fullWidth' />
+                  <Box mt={3} />
+                  <MonthlySales data={sales} />
+                  <Box mt={4} />
+                  <Typography variant='h4'>Total de ventas</Typography>
+                  <Box mt={1} />
+                  <Divider variant='fullWidth' />
+                  <Box mt={3} />
                   <CollapsibleTable data={sales} />
                </>
             )}
