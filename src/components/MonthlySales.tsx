@@ -36,7 +36,6 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
     */
    const onCopyObject = (sale: MonthlySalesInterface) => {
       try {
-         console.log(sale);
          navigator.clipboard.writeText(JSON.stringify(sale));
          onAlertClick();
       } catch (e) {
