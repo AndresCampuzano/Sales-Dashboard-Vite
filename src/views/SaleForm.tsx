@@ -169,7 +169,11 @@ export const SaleForm = () => {
    };
 
    const onChangeDiscountPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setDiscountPrice(Number(e.target.value));
+      if (e.target.value === '') {
+         setDiscountPrice(0);
+      } else {
+         setDiscountPrice(parseInt(e.target.value));
+      }
    };
 
    // If isPriceWithDiscount, sets discount price to the current item price
