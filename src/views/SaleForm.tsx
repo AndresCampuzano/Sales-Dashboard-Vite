@@ -27,6 +27,7 @@ import {
    DialogTitle,
    DialogContentText,
    Breadcrumbs,
+   Checkbox,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -66,6 +67,9 @@ export const SaleForm = () => {
    const [itemInputValue, setItemInputValue] = useState('');
    const [selectedItemInfo, setSelectedItemInfo] = useState<Item | null>(null);
    const [selectedColor, setSelectedColor] = useState<string>('');
+   const [isPriceWithDiscount, setIsPriceWithDiscount] =
+      useState<boolean>(false);
+   const [discountPrice, setDiscountPrice] = useState<number>(0);
    // Item list states
    const [itemList, setItemList] = useState<ItemList[]>([]);
    const [itemToDeleteIndex, setItemToDeleteIndex] = useState<number | null>(
@@ -160,6 +164,21 @@ export const SaleForm = () => {
       setSelectedColor(e.target.value);
    };
 
+   const onDiscountChange = () => {
+      setIsPriceWithDiscount(!isPriceWithDiscount);
+   };
+
+   const onChangeDiscountPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDiscountPrice(Number(e.target.value));
+   };
+
+   // If isPriceWithDiscount, sets discount price to the current item price
+   useEffect(() => {
+      if (isPriceWithDiscount) {
+         setDiscountPrice(selectedItemInfo?.price as number);
+      }
+   }, [isPriceWithDiscount, selectedItemInfo]);
+
    /**
     * Posts sale object to API
     */
@@ -193,10 +212,15 @@ export const SaleForm = () => {
    const onSaveItemInList = () => {
       // Saving current item in list
       if (!selectedItemInfo) return;
+      const currentItem = {
+         ...selectedItemInfo,
+         // recovers discount price if isPriceWithDiscount is true
+         price: isPriceWithDiscount ? discountPrice : selectedItemInfo.price,
+      };
       setItemList((prev) => [
          ...prev,
          {
-            ...selectedItemInfo,
+            ...currentItem,
             color: selectedColor,
          },
       ]);
@@ -204,6 +228,8 @@ export const SaleForm = () => {
       setSelectedItem(null);
       setSelectedItemInfo(null);
       setSelectedColor('');
+      setIsPriceWithDiscount(false);
+      setDiscountPrice(0);
    };
 
    /**
@@ -582,6 +608,38 @@ export const SaleForm = () => {
                                  )}
                               </RadioGroup>
                            </FormControl>
+                           <Box mt={2} />
+                           <FormControlLabel
+                              control={
+                                 <Checkbox
+                                    checked={isPriceWithDiscount}
+                                    onChange={onDiscountChange}
+                                    inputProps={{ 'aria-label': 'controlled' }}
+                                 />
+                              }
+                              label='Precio con descuento'
+                           />
+                           {isPriceWithDiscount ? (
+                              <>
+                                 <Box mt={2} />
+                                 <TextField
+                                    id='outlined-basic'
+                                    label='Precio con descuento'
+                                    variant={'outlined'}
+                                    size={'small'}
+                                    value={discountPrice}
+                                    fullWidth={true}
+                                    onChange={onChangeDiscountPrice}
+                                    InputProps={{
+                                       startAdornment: (
+                                          <InputAdornment position='start'>
+                                             $
+                                          </InputAdornment>
+                                       ),
+                                    }}
+                                 />
+                              </>
+                           ) : null}
                            <Box mt={2} />
                            <Button
                               variant='contained'
