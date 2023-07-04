@@ -1,12 +1,21 @@
 import { DateTime } from 'luxon';
 import { MonthlySalesInterface, SalesDataTable } from '../types/types.ts';
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { groupSalesByMonth } from '../utils/groupSalesByMonth.ts';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import {
+   Alert,
+   Card,
+   CardContent,
+   Grid,
+   Snackbar,
+   Typography,
+} from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { numberFormat } from '../utils/numberFormat.ts';
 
 export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
    const [sales, setSales] = useState<MonthlySalesInterface[]>([]);
+   const [openAlert, setOpenAlert] = useState(false);
 
    useEffect(() => {
       setSales(groupSalesByMonth(data));
@@ -21,6 +30,30 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
       const localizedMonth = dateTime.setLocale('es').toFormat('MMMM yyyy');
       return localizedMonth.charAt(0).toUpperCase() + localizedMonth.slice(1);
    }
+
+   /**
+    * Copy the object to the clipboard
+    */
+   const onCopyObject = (sale: MonthlySalesInterface) => {
+      try {
+         console.log(sale);
+         navigator.clipboard.writeText(JSON.stringify(sale));
+         onAlertClick();
+      } catch (e) {
+         console.error(e);
+      }
+   };
+
+   const onAlertClick = () => {
+      setOpenAlert(true);
+   };
+
+   const handleAlertClose = (_?: SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+         return;
+      }
+      setOpenAlert(false);
+   };
 
    return (
       <>
@@ -46,13 +79,31 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
                         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
                            {sale.allItems.length > 1
                               ? `${sale.allItems.length} ventas`
-                              : `${sale.allItems.length} venta`}
+                              : `${sale.allItems.length} venta`}{' '}
+                           <ContentCopyIcon
+                              fontSize={'small'}
+                              onClick={() => onCopyObject(sale)}
+                           />
                         </Typography>
                      </CardContent>
                   </Card>
                </Grid>
             ))}
          </Grid>
+         <Snackbar
+            open={openAlert}
+            autoHideDuration={3000}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            onClose={handleAlertClose}
+         >
+            <Alert
+               onClose={handleAlertClose}
+               severity='info'
+               sx={{ width: '100%' }}
+            >
+               Copiado en el portapapeles
+            </Alert>
+         </Snackbar>
       </>
    );
 };
