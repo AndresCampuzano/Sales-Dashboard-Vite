@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
    Avatar,
    Box,
+   Button,
    Container,
    Divider,
    LinearProgress,
@@ -19,6 +20,7 @@ import TableBody from '@mui/material/TableBody';
 import { numberFormat } from '../utils/numberFormat.ts';
 import { colorFromConstants } from '../utils/colorFromConstants.ts';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { getSales } from '../services/sale.service.ts';
 import { prepareDataSales } from '../utils/prepareDataSales.ts';
@@ -54,6 +56,17 @@ export const Items = () => {
             <Typography variant='h3'>Productos</Typography>
             <Box mt={6} />
             <Box mt={3} />
+            <Button
+               variant='contained'
+               color={'inherit'}
+               startIcon={<AddIcon />}
+               size={'medium'}
+               onClick={() => navigate('/dashboard/item-form')}
+               disabled={loading}
+            >
+               Crear nuevo
+            </Button>
+            <Box mt={2} />
             {loading ? (
                <>
                   <LinearProgress />
