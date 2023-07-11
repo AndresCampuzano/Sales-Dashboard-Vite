@@ -12,7 +12,6 @@ import { getSales } from '../services/sale.service.ts';
 import { CollapsibleTable } from '../components/CollapsibleTable.tsx';
 import { SalesDataTable } from '../types/types.ts';
 import { prepareDataSales } from '../utils/prepareDataSales.ts';
-import { MonthlySales } from '../components/MonthlySales.tsx';
 
 export const Dashboard = () => {
    const navigate = useNavigate();
@@ -38,7 +37,7 @@ export const Dashboard = () => {
       <>
          <Container>
             <Box mt={6} />
-            <Typography variant='h3'>Panel</Typography>
+            <Typography variant='h3'>Inicio</Typography>
             <Box mt={6} />
 
             <Box mt={3} />
@@ -51,6 +50,16 @@ export const Dashboard = () => {
             >
                Nueva Venta
             </Button>
+            <Button
+               variant='contained'
+               color={'primary'}
+               size={'medium'}
+               onClick={() => navigate('/items')}
+               disabled={loading}
+               sx={{ marginLeft: 2 }}
+            >
+               Productos
+            </Button>
             <Box mt={3} />
             {loading ? (
                <>
@@ -58,11 +67,6 @@ export const Dashboard = () => {
                </>
             ) : (
                <>
-                  <Typography variant='h4'>Ventas por meses</Typography>
-                  <Box mt={1} />
-                  <Divider variant='fullWidth' />
-                  <Box mt={3} />
-                  <MonthlySales data={sales} />
                   <Box mt={4} />
                   <Typography variant='h4'>Total de ventas</Typography>
                   <Box mt={1} />

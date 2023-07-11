@@ -32,7 +32,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import SendIcon from '@mui/icons-material/Send';
-import { Client, Item, Sale } from '../types/types';
+import { Client, Item, ItemList, Sale } from '../types/types';
 import { Link, useNavigate } from 'react-router-dom';
 import { numberFormat } from '../utils/numberFormat';
 import { getClients } from '../services/client.service';
@@ -77,8 +77,6 @@ export const SaleForm = () => {
    );
 
    const navigate = useNavigate();
-
-   type ItemList = Item & { color: string };
 
    interface ClientOption {
       id: string;

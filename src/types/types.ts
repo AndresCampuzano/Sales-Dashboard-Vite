@@ -78,3 +78,5 @@ export interface MonthlySalesInterface {
    allItems: SalesDataTable[];
    revenue: number;
 }
+
+export type ItemList = Item & { color: string };

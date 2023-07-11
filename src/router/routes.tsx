@@ -6,12 +6,17 @@ import { Layout } from '../views/Layout.tsx';
 import { SaleForm } from '../views/SaleForm.tsx';
 import { ClientForm } from '../views/ClientForm.tsx';
 import { ItemForm } from '../views/ItemForm.tsx';
+import { Items } from '../views/Items.tsx';
 
 export const router = createBrowserRouter([
    {
       path: '/',
       element: <Home />,
       errorElement: <ErrorPage />,
+   },
+   {
+      path: '/items',
+      element: <Items />,
    },
    {
       path: '/dashboard',
