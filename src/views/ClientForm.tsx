@@ -82,6 +82,7 @@ export const ClientForm = () => {
             setInstagramAccount(data.instagram_account);
             setAddress(data.address);
             setSelectedDepartment(data.department);
+            console.log(data.city);
             setSelectedCity(data.city);
             setPhone(data.phone.toString());
          } catch (e) {
@@ -110,7 +111,8 @@ export const ClientForm = () => {
 
       const options = selectedDepartmentObj.cities;
       setCitiesOptions(options);
-      setSelectedCity(options[0]);
+      // In edit mode, set the original client city as selected
+      setSelectedCity(selectedCity || options[0]);
    }, [selectedDepartment]);
 
    /**
