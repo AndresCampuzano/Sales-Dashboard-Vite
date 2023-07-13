@@ -38,6 +38,10 @@ export const COLORS = [
       color: '#e07c10',
    },
    {
+      label: 'Rosado',
+      color: '#d272d5',
+   },
+   {
       label: 'Otro',
       color: '#a6a6a6',
       textColor: '#ffffff',
