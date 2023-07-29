@@ -343,6 +343,13 @@ export const SaleForm = () => {
                            setClientInputValue(newInputValue);
                         }}
                         fullWidth
+                        renderOption={(props, option) => {
+                           return (
+                              <li {...props} key={option.id}>
+                                 {option.label}
+                              </li>
+                           );
+                        }}
                         renderInput={(params) => (
                            <TextField {...params} label='Clientes' />
                         )}
@@ -504,6 +511,13 @@ export const SaleForm = () => {
                            setItemInputValue(newInputValue);
                         }}
                         fullWidth={true}
+                        renderOption={(props, option) => {
+                           return (
+                              <li {...props} key={option.id}>
+                                 {option.label}
+                              </li>
+                           );
+                        }}
                         renderInput={(params) => (
                            <TextField {...params} label='Productos' />
                         )}
