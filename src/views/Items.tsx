@@ -8,7 +8,7 @@ import {
    LinearProgress,
    Typography,
 } from '@mui/material';
-import { Item, SalesDataTable } from '../types/types.ts';
+import { ExpenseInterface, Item, SalesDataTable } from '../types/types.ts';
 import { getItems } from '../services/item.service.ts';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
@@ -25,11 +25,13 @@ import { useNavigate } from 'react-router-dom';
 import { getSales } from '../services/sale.service.ts';
 import { prepareDataSales } from '../utils/prepareDataSales.ts';
 import { MonthlySales } from '../components/MonthlySales.tsx';
+import { getExpenses } from '../services/expense.service.ts';
 
 export const Items = () => {
    const navigate = useNavigate();
    const [loading, setLoading] = useState<boolean>(true);
    const [sales, setSales] = useState<SalesDataTable[]>([]);
+   const [expenses, setExpenses] = useState<ExpenseInterface[]>([]);
    const [items, setItems] = useState<Item[]>([]);
 
    useEffect(() => {
@@ -37,9 +39,11 @@ export const Items = () => {
          setLoading(true);
          try {
             const itemsRes = await getItems();
-            const data = await getSales();
-            setSales(prepareDataSales(data));
+            const sales = await getSales();
+            const expenses = await getExpenses();
             setItems(itemsRes);
+            setSales(prepareDataSales(sales));
+            setExpenses(expenses);
          } catch (error) {
             console.error(error);
          } finally {
@@ -146,7 +150,7 @@ export const Items = () => {
                   <Box mt={1} />
                   <Divider variant='fullWidth' />
                   <Box mt={3} />
-                  <MonthlySales data={sales} />
+                  <MonthlySales sales={sales} expenses={expenses} />
                </>
             )}
          </Container>

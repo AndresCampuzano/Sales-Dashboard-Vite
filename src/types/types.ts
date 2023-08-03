@@ -73,10 +73,11 @@ export interface SalesDataTable {
    };
 }
 
-export interface MonthlySalesInterface {
+export interface MonthlySalesAndExpensesInterface {
    month: string;
    allItems: SalesDataTable[];
    revenue: number;
+   allExpenses: ExpenseInterface[];
 }
 
 export type ItemList = Item & { color: string };
@@ -84,6 +85,7 @@ export type ItemList = Item & { color: string };
 export interface ExpenseInterface {
    _id?: string;
    name: string;
+   price: number;
    type: string;
    description?: string;
    created_at?: string;

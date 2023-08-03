@@ -19,6 +19,7 @@ import {
    FormControlLabel,
    Radio,
    FormControl,
+   InputAdornment,
 } from '@mui/material';
 import { ExpenseInterface } from '../types/types';
 import SendIcon from '@mui/icons-material/Send';
@@ -43,6 +44,7 @@ export const ExpenseForm = () => {
    // Form states
    const [name, setName] = useState<string>('');
    const [type, setType] = useState<string>('');
+   const [price, setPrice] = useState<number>(20000);
    const [description, setDescription] = useState<string>('');
 
    const [searchParams] = useSearchParams();
@@ -74,6 +76,7 @@ export const ExpenseForm = () => {
             setOriginalExpense(data);
             setName(data.name);
             setType(data.type);
+            setPrice(data.price);
             setDescription(data?.description || '');
          } catch (e) {
             setIsEditing(false);
@@ -92,10 +95,10 @@ export const ExpenseForm = () => {
       const validation: boolean =
          type.trim().length > 0 && type === 'other'
             ? name.trim().length > 0
-            : true;
+            : true && price > 0;
 
       setIsBtnValid(validation);
-   }, [name, type]);
+   }, [name, type, price]);
 
    const onChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
       setType(e.target.value);
@@ -103,6 +106,15 @@ export const ExpenseForm = () => {
 
    const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
+   };
+
+   const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
+      // Sets the price to 0 if the input is empty
+      if (e.target.value === '') {
+         setPrice(0);
+      } else {
+         setPrice(parseInt(e.target.value));
+      }
    };
 
    const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,6 +132,7 @@ export const ExpenseForm = () => {
                : (EXPENSES_TYPES.find((exp) => exp.value === type)
                     ?.label as string),
          type,
+         price,
          description,
       };
 
@@ -233,6 +246,25 @@ export const ExpenseForm = () => {
                               <Box mt={2} />
                            </>
                         ) : null}
+                        <TextField
+                           id='outlined-basic'
+                           label='Valor'
+                           variant={'outlined'}
+                           size={'small'}
+                           value={price}
+                           type={'number'}
+                           onChange={onChangePrice}
+                           fullWidth
+                           required
+                           InputProps={{
+                              startAdornment: (
+                                 <InputAdornment position='start'>
+                                    $
+                                 </InputAdornment>
+                              ),
+                           }}
+                        />
+                        <Box mt={2} />
                         <TextField
                            id='outlined-basic-description'
                            label='Descripción (opcional)'

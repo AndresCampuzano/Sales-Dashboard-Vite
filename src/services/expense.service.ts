@@ -13,8 +13,8 @@ export async function getExpense(
 /**
  * Fetches all Expenses
  */
-export async function getExpenses(): Promise<ExpenseInterface[] | undefined> {
-   return await dynamicFetch('expenses');
+export async function getExpenses(): Promise<ExpenseInterface[] | []> {
+   return (await dynamicFetch('expenses')) as ExpenseInterface[] | [];
 }
 
 /**

@@ -1,25 +1,53 @@
 import { DateTime } from 'luxon';
-import { MonthlySalesInterface, SalesDataTable } from '../types/types.ts';
+import { useNavigate } from 'react-router-dom';
+import {
+   ExpenseInterface,
+   MonthlySalesAndExpensesInterface,
+   SalesDataTable,
+} from '../types/types.ts';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { groupSalesByMonth } from '../utils/groupSalesByMonth.ts';
 import {
    Alert,
+   Avatar,
    Card,
    CardContent,
    Grid,
+   List,
+   ListItem,
+   ListItemAvatar,
+   ListItemText,
    Snackbar,
    Typography,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { numberFormat } from '../utils/numberFormat.ts';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
-   const [sales, setSales] = useState<MonthlySalesInterface[]>([]);
+export const MonthlySales = ({
+   sales,
+   expenses,
+}: {
+   sales: SalesDataTable[];
+   expenses: ExpenseInterface[];
+}) => {
+   const [data, setData] = useState<MonthlySalesAndExpensesInterface[]>([]);
    const [openAlert, setOpenAlert] = useState(false);
 
+   const navigate = useNavigate();
+
    useEffect(() => {
-      setSales(groupSalesByMonth(data));
-   }, [data]);
+      setData(
+         groupSalesByMonth({
+            sales,
+            expenses,
+         })
+      );
+   }, [sales, expenses]);
 
    /**
     * By a given month and year, returns the month and year in spanish
@@ -34,7 +62,7 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
    /**
     * Copy the object to the clipboard
     */
-   const onCopyObject = (sale: MonthlySalesInterface) => {
+   const onCopyObject = (sale: MonthlySalesAndExpensesInterface) => {
       try {
          navigator.clipboard.writeText(JSON.stringify(sale));
          onAlertClick();
@@ -61,8 +89,8 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
          >
-            {sales.map((sale) => (
-               <Grid key={sale.month} xs={12} sm={4} md={4} item>
+            {data.map((x) => (
+               <Grid key={x.month} xs={12} sm={4} md={4} item>
                   <Card sx={{ minWidth: 275 }}>
                      <CardContent>
                         <Typography
@@ -70,20 +98,60 @@ export const MonthlySales = ({ data }: { data: SalesDataTable[] }) => {
                            color='text.secondary'
                            gutterBottom
                         >
-                           {localizeMonth(sale.month)}
+                           {localizeMonth(x.month)}
                         </Typography>
-                        <Typography variant='h5' component='div'>
-                           {numberFormat(sale.revenue)}
+                        <Typography
+                           variant='h5'
+                           component='div'
+                           color={x.revenue < 0 ? 'red' : 'inherit'}
+                        >
+                           {numberFormat(x.revenue)}
                         </Typography>
                         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                           {sale.allItems.length > 1
-                              ? `${sale.allItems.length} ventas`
-                              : `${sale.allItems.length} venta`}{' '}
+                           {x.allItems.length > 1
+                              ? `${x.allItems.length} ventas`
+                              : `${x.allItems.length} venta`}{' '}
                            <ContentCopyIcon
                               fontSize={'small'}
-                              onClick={() => onCopyObject(sale)}
+                              onClick={() => onCopyObject(x)}
                            />
                         </Typography>
+                        <List
+                           sx={{
+                              width: '100%',
+                           }}
+                        >
+                           {x.allExpenses.map((y) => (
+                              <ListItem key={y._id}>
+                                 <ListItemAvatar>
+                                    <Avatar>
+                                       {y.type === 'instagram_ad' ? (
+                                          <InstagramIcon />
+                                       ) : y.type === 'facebook_ad' ? (
+                                          <FacebookIcon />
+                                       ) : (
+                                          <AttachMoneyIcon />
+                                       )}
+                                    </Avatar>
+                                 </ListItemAvatar>
+                                 <ListItemText
+                                    primary={y.name}
+                                    secondary={'- ' + numberFormat(y.price)}
+                                 />
+                                 <IconButton
+                                    edge='end'
+                                    aria-label='edit'
+                                    onClick={() =>
+                                       navigate(
+                                          `/dashboard/expense-form?id=${y._id}`
+                                       )
+                                    }
+                                 >
+                                    <EditIcon />
+                                 </IconButton>
+                              </ListItem>
+                           ))}
+                        </List>
                      </CardContent>
                   </Card>
                </Grid>
