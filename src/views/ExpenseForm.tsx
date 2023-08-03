@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import {
-   Autocomplete,
-   Avatar,
    Box,
    Button,
    CircularProgress,
@@ -15,39 +13,37 @@ import {
    DialogContent,
    DialogContentText,
    DialogTitle,
-   Alert,
-   InputAdornment,
    Breadcrumbs,
+   FormLabel,
+   RadioGroup,
+   FormControlLabel,
+   Radio,
+   FormControl,
 } from '@mui/material';
-import { Item } from '../types/types';
+import { ExpenseInterface } from '../types/types';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {
-   deleteItem,
-   getItem,
-   postItem,
-   updateItem,
-} from '../services/item.service';
-import { compressImage } from '../utils/compressImage';
-import { COLORS } from '../constants/constants';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+   deleteExpense,
+   getExpense,
+   postExpense,
+   updateExpense,
+} from '../services/expense.service.ts';
+import { EXPENSES_TYPES } from '../constants/constants.ts';
 
-interface ColorOption {
-   label: string;
-}
-
-export const ItemForm = () => {
+export const ExpenseForm = () => {
    const [loading, setLoading] = useState<boolean>(true);
-   const [originalItem, setOriginalItem] = useState<Item | null>(null);
+   const [originalExpense, setOriginalExpense] =
+      useState<ExpenseInterface | null>(null);
    const [isEditing, setIsEditing] = useState<boolean>(false);
    const [isBtnValid, setIsBtnValid] = useState<boolean>(false);
    const [isSendingData, setIsSendingData] = useState<boolean>(false);
    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
    // Form states
    const [name, setName] = useState<string>('');
-   const [price, setPrice] = useState<number>(20000);
-   const [image, setImage] = useState<string>('');
-   const [availableColors, setAvailableColors] = useState<ColorOption[]>([]);
+   const [type, setType] = useState<string>('');
+   const [description, setDescription] = useState<string>('');
 
    const [searchParams] = useSearchParams();
    const id = searchParams.get('id');
@@ -55,38 +51,36 @@ export const ItemForm = () => {
    const navigate = useNavigate();
 
    /**
-    * Fetch item by id from API
+    * Fetch expense by id from API
     */
    useEffect(() => {
       if (!id) {
          setIsEditing(false);
          setLoading(false);
+         setType(EXPENSES_TYPES[0].value);
          return;
       }
 
       /**
-       * Fetches the item from the API if there is an id
+       * Fetches the expense from the API if there is an id
        */
       const fetchData = async () => {
          setLoading(true);
          setIsEditing(true);
          try {
-            const data = await getItem(id);
+            const data = await getExpense(id);
 
             if (!data) {
                setIsEditing(false);
                setLoading(false);
-               throw new Error('Item not found');
+               throw new Error('Expense not found');
             }
 
             setIsEditing(true);
-            setOriginalItem(data);
+            setOriginalExpense(data);
             setName(data.name);
-            setPrice(data.price);
-            setImage(data.image);
-            setAvailableColors(
-               data.available_colors.map((x) => ({ label: x }))
-            );
+            setType(data.type);
+            setDescription(data?.description || '');
          } catch (e) {
             console.error(e);
          } finally {
@@ -101,46 +95,47 @@ export const ItemForm = () => {
     */
    useEffect(() => {
       const validation: boolean =
-         name.trim().length > 0 &&
-         price > 0 &&
-         !!image &&
-         availableColors.length > 0;
+         type.trim().length > 0 && type === 'other'
+            ? name.trim().length > 0
+            : true;
 
       setIsBtnValid(validation);
-   }, [availableColors, image, name, price]);
+   }, [name, type]);
+
+   const onChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setType(e.target.value);
+   };
 
    const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
    };
 
-   const onChangePrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-      // Sets the price to 0 if the input is empty
-      if (e.target.value === '') {
-         setPrice(0);
-      } else {
-         setPrice(parseInt(e.target.value));
-      }
+   const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDescription(e.target.value);
    };
 
    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!isBtnValid) return;
 
-      const data: Item = {
-         name,
-         price,
-         image,
-         available_colors: availableColors.map((x) => x.label),
+      const data: ExpenseInterface = {
+         name:
+            type === 'other'
+               ? name
+               : (EXPENSES_TYPES.find((exp) => exp.value === type)
+                    ?.label as string),
+         type,
+         description,
       };
 
       try {
          setIsSendingData(true);
-         if (isEditing && originalItem?._id) {
-            await updateItem(originalItem?._id, data);
+         if (isEditing && originalExpense?._id) {
+            await updateExpense(originalExpense?._id, data);
          } else {
-            await postItem(data);
+            await postExpense(data);
          }
-         navigate('/dashboard/sale-form');
+         navigate('/dashboard');
       } catch (e) {
          console.error(e);
       } finally {
@@ -148,23 +143,13 @@ export const ItemForm = () => {
       }
    };
 
-   const onChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) return;
-      try {
-         const image = await compressImage(e.target.files[0]);
-         setImage(image);
-      } catch (e) {
-         console.error(e);
-      }
-   };
-
-   const onDeleteItem = async () => {
-      if (!originalItem?._id) return;
+   const onDeleteExpense = async () => {
+      if (!originalExpense?._id) return;
 
       try {
          setIsSendingData(true);
-         await deleteItem(originalItem._id);
-         navigate('/dashboard/sale-form');
+         await deleteExpense(originalExpense._id);
+         navigate('/dashboard');
       } catch (e) {
          console.error(e);
       } finally {
@@ -194,15 +179,15 @@ export const ItemForm = () => {
                      Panel
                   </Link>
                   <Typography color='text.primary'>
-                     {isEditing ? 'Editar Producto' : 'Nuevo Producto'}
+                     {isEditing ? 'Editar Gasto' : 'Nuevo Gasto'}
                   </Typography>
                </Breadcrumbs>
                <Box mt={4} />
                <Typography variant='h3'>
-                  {isEditing ? 'Editar Producto' : 'Nuevo Producto'}
+                  {isEditing ? 'Editar Gasto' : 'Nuevo Gasto'}
                </Typography>
                <Box mt={6} />
-               <Typography variant='h4'>Datos del producto</Typography>
+               <Typography variant='h4'>Datos del gasto</Typography>
                <Box mt={1} />
                <Divider variant='fullWidth' />
                <Box mt={3} />
@@ -213,79 +198,54 @@ export const ItemForm = () => {
                      <Box width={'100%'} maxWidth={'500px'}>
                         {isEditing && (
                            <Typography variant={'body1'}>
-                              Editando el producto: {originalItem?.name}
+                              Editando el gasto: {originalExpense?.name}
                            </Typography>
                         )}
                         <Box mt={3} />
-                        <TextField
-                           id='outlined-basic'
-                           label='Nombre'
-                           variant={'outlined'}
-                           size={'small'}
-                           value={name}
-                           onChange={onChangeName}
-                           fullWidth
-                           required
-                        />
+                        <FormControl>
+                           <FormLabel id='radio-buttons-group-item-color'>
+                              Tipo de gasto
+                           </FormLabel>
+                           <RadioGroup
+                              aria-labelledby='radio-buttons-group-item-color'
+                              name='color-item-group'
+                              value={type}
+                              onChange={onChangeType}
+                           >
+                              {EXPENSES_TYPES.map((expense) => (
+                                 <FormControlLabel
+                                    value={expense.value}
+                                    control={<Radio />}
+                                    label={expense.label}
+                                    key={expense.value}
+                                 />
+                              ))}
+                           </RadioGroup>
+                        </FormControl>
                         <Box mt={2} />
-                        <TextField
-                           id='outlined-basic'
-                           label='Precio'
-                           variant={'outlined'}
-                           size={'small'}
-                           value={price}
-                           type={'number'}
-                           onChange={onChangePrice}
-                           fullWidth
-                           required
-                           InputProps={{
-                              startAdornment: (
-                                 <InputAdornment position='start'>
-                                    $
-                                 </InputAdornment>
-                              ),
-                           }}
-                        />
-                        <Box mt={2} />
-                        <input
-                           type='file'
-                           accept='image/*'
-                           onChange={onChangeImage}
-                        />
-                        <Box mt={2} />
-                        {image && (
-                           <Avatar
-                              alt={name}
-                              src={image}
-                              sx={{ width: 100, height: 100 }}
-                           />
-                        )}
-                        <Box mt={2} />
-                        <Alert severity='info'>
-                           Si el producto tiene multiples colores, por ejemplo,
-                           Colibrí, carga una sola imagen y luego agrega los
-                           colores del mismo.
-                        </Alert>
-                        <Box mt={2} />
-                        <Autocomplete
-                           multiple
-                           id='colors-autocomplete'
-                           options={COLORS.map((x) => ({ label: x.label }))}
-                           value={availableColors}
-                           filterSelectedOptions
-                           onChange={(_, value) => {
-                              setAvailableColors(value);
-                           }}
-                           isOptionEqualToValue={(option, value) =>
-                              option.label === value.label
-                           }
-                           renderInput={(params) => (
+                        {type === 'other' ? (
+                           <>
                               <TextField
-                                 {...params}
-                                 label='Colores disponibles'
-                                 placeholder='Colores disponibles'
+                                 id='outlined-basic-name'
+                                 label='Tipo del gasto'
+                                 variant={'outlined'}
+                                 size={'small'}
+                                 value={name}
+                                 onChange={onChangeName}
+                                 fullWidth
+                                 required
                               />
-                           )}
+                              <Box mt={2} />
+                           </>
+                        ) : null}
+                        <TextField
+                           id='outlined-basic-description'
+                           label='Descripción (opcional)'
+                           variant={'outlined'}
+                           size={'small'}
+                           value={description}
+                           onChange={onChangeDescription}
+                           fullWidth
                         />
                         <Box mt={3} />
                         {isSendingData ? (
@@ -324,16 +284,16 @@ export const ItemForm = () => {
          </main>
          <Dialog open={showDeleteModal} onClose={onCloseDeleteModal}>
             <DialogTitle id='alert-dialog-title'>
-               Borrar {originalItem?.name}
+               Borrar {originalExpense?.name}
             </DialogTitle>
             <DialogContent>
                <DialogContentText id='alert-dialog-description'>
-                  ¿Deseas borrar el producto?
+                  ¿Deseas borrar el gasto?
                </DialogContentText>
             </DialogContent>
             <DialogActions>
                <Button onClick={onCloseDeleteModal}>Cancelar</Button>
-               <Button onClick={onDeleteItem}>Borrar</Button>
+               <Button onClick={onDeleteExpense}>Borrar</Button>
             </DialogActions>
          </Dialog>
       </>

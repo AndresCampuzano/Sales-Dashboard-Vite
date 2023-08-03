@@ -49,6 +49,26 @@ export const COLORS = [
 ];
 
 /**
+ * @description Expenses Types
+ * @constant
+ * @readonly
+ */
+export const EXPENSES_TYPES = [
+   {
+      label: 'Anuncio de Instagram',
+      value: 'instagram_ad',
+   },
+   {
+      label: 'Anuncio de Facebook',
+      value: 'facebook_ad',
+   },
+   {
+      label: 'Otro',
+      value: 'other',
+   },
+];
+
+/**
  * @description Places available for the clients in CO
  * @constant
  * @readonly

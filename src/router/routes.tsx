@@ -7,6 +7,7 @@ import { SaleForm } from '../views/SaleForm.tsx';
 import { ClientForm } from '../views/ClientForm.tsx';
 import { ItemForm } from '../views/ItemForm.tsx';
 import { Items } from '../views/Items.tsx';
+import { ExpenseForm } from '../views/ExpenseForm.tsx';
 
 export const router = createBrowserRouter([
    {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
          {
             path: '/dashboard/item-form',
             element: <ItemForm />,
+         },
+         {
+            path: '/dashboard/expense-form',
+            element: <ExpenseForm />,
          },
          {
             path: '/dashboard/client-form',
