@@ -65,24 +65,19 @@ export const ExpenseForm = () => {
        * Fetches the expense from the API if there is an id
        */
       const fetchData = async () => {
-         setLoading(true);
-         setIsEditing(true);
          try {
+            setLoading(true);
+            setIsEditing(true);
             const data = await getExpense(id);
-
-            if (!data) {
-               setIsEditing(false);
-               setLoading(false);
-               throw new Error('Expense not found');
-            }
-
+            if (!data) return;
             setIsEditing(true);
             setOriginalExpense(data);
             setName(data.name);
             setType(data.type);
             setDescription(data?.description || '');
          } catch (e) {
-            console.error(e);
+            setIsEditing(false);
+            setType(EXPENSES_TYPES[0].value);
          } finally {
             setLoading(false);
          }

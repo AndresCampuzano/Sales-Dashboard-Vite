@@ -1,21 +1,20 @@
 import { ExpenseInterface } from '../types/types';
+import { dynamicFetch } from '../utils/dynamicFetch.ts';
 
 /**
  * Fetches an Expense
  */
-export async function getExpense(id: string): Promise<ExpenseInterface> {
-   const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/expenses/${id}`
-   );
-   return await res.json();
+export async function getExpense(
+   id: string
+): Promise<ExpenseInterface | undefined> {
+   return await dynamicFetch(`expenses/${id}`);
 }
 
 /**
  * Fetches all Expenses
  */
-export async function getExpenses(): Promise<ExpenseInterface[]> {
-   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/expenses`);
-   return await res.json();
+export async function getExpenses(): Promise<ExpenseInterface[] | undefined> {
+   return await dynamicFetch('expenses');
 }
 
 /**
