@@ -116,45 +116,61 @@ export const MonthlySales = ({
                               onClick={() => onCopyObject(x)}
                            />
                         </Typography>
-                        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                           {numberFormat(x.revenueWithoutExpenses)} sin gastos.
-                        </Typography>
-                        <List
-                           sx={{
-                              width: '100%',
-                           }}
-                        >
-                           {x.allExpenses.map((y) => (
-                              <ListItem key={y._id}>
-                                 <ListItemAvatar>
-                                    <Avatar>
-                                       {y.type === 'instagram_ad' ? (
-                                          <InstagramIcon />
-                                       ) : y.type === 'facebook_ad' ? (
-                                          <FacebookIcon />
-                                       ) : (
-                                          <AttachMoneyIcon />
-                                       )}
-                                    </Avatar>
-                                 </ListItemAvatar>
-                                 <ListItemText
-                                    primary={y.name}
-                                    secondary={'- ' + numberFormat(y.price)}
-                                 />
-                                 <IconButton
-                                    edge='end'
-                                    aria-label='edit'
-                                    onClick={() =>
-                                       navigate(
-                                          `/dashboard/expense-form?id=${y._id}`
-                                       )
-                                    }
-                                 >
-                                    <EditIcon />
-                                 </IconButton>
-                              </ListItem>
-                           ))}
-                        </List>
+                        {x.expenses > 0 && (
+                           <>
+                              <Typography
+                                 sx={{ mb: 1.5 }}
+                                 color='text.secondary'
+                              >
+                                 {numberFormat(x.revenueWithoutExpenses)} sin
+                                 gastos.
+                              </Typography>
+                              <List
+                                 sx={{
+                                    width: '100%',
+                                 }}
+                              >
+                                 {x.allExpenses.map((y) => (
+                                    <ListItem key={y._id}>
+                                       <ListItemAvatar>
+                                          <Avatar>
+                                             {y.type === 'instagram_ad' ? (
+                                                <InstagramIcon />
+                                             ) : y.type === 'facebook_ad' ? (
+                                                <FacebookIcon />
+                                             ) : (
+                                                <AttachMoneyIcon />
+                                             )}
+                                          </Avatar>
+                                       </ListItemAvatar>
+                                       <ListItemText
+                                          primary={y.name}
+                                          secondary={
+                                             '- ' + numberFormat(y.price)
+                                          }
+                                       />
+                                       <IconButton
+                                          edge='end'
+                                          aria-label='edit'
+                                          onClick={() =>
+                                             navigate(
+                                                `/dashboard/expense-form?id=${y._id}`
+                                             )
+                                          }
+                                       >
+                                          <EditIcon />
+                                       </IconButton>
+                                    </ListItem>
+                                 ))}
+                              </List>
+                              <Typography
+                                 sx={{ mb: 1.5 }}
+                                 color='text.secondary'
+                              >
+                                 Suma de los gastos: {numberFormat(x.expenses)}
+                              </Typography>
+                           </>
+                        )}
                      </CardContent>
                   </Card>
                </Grid>

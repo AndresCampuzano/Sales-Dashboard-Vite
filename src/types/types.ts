@@ -79,6 +79,7 @@ export interface MonthlySalesAndExpensesInterface {
    revenue: number;
    revenueWithoutExpenses: number;
    allExpenses: ExpenseInterface[];
+   expenses: number;
 }
 
 export type ItemList = Item & { color: string };
