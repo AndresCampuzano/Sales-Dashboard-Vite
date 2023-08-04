@@ -116,6 +116,9 @@ export const MonthlySales = ({
                               onClick={() => onCopyObject(x)}
                            />
                         </Typography>
+                        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                           {numberFormat(x.revenueWithoutExpenses)} sin gastos.
+                        </Typography>
                         <List
                            sx={{
                               width: '100%',

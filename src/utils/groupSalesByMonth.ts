@@ -15,7 +15,10 @@ export function groupSalesByMonth({
    expenses: ExpenseInterface[];
 }): MonthlySalesAndExpensesInterface[] {
    // Create an empty array to store monthly sales and expenses data.
-   const monthlySales: MonthlySalesAndExpensesInterface[] = [];
+   const monthlySales: Omit<
+      MonthlySalesAndExpensesInterface,
+      'revenueWithoutExpenses'
+   >[] = [];
 
    // Loop through each sale data in the sales array.
    for (const sale of sales) {
@@ -63,6 +66,7 @@ export function groupSalesByMonth({
       return {
          ...x,
          revenue: sales - expenses,
+         revenueWithoutExpenses: sales,
       };
    });
 }

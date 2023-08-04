@@ -77,6 +77,7 @@ export interface MonthlySalesAndExpensesInterface {
    month: string;
    allItems: SalesDataTable[];
    revenue: number;
+   revenueWithoutExpenses: number;
    allExpenses: ExpenseInterface[];
 }
 
