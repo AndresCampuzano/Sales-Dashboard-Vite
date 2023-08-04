@@ -57,20 +57,9 @@ export const Items = () => {
       <>
          <Container>
             <Box mt={6} />
-            <Typography variant='h3'>Productos</Typography>
+            <Typography variant='h3'>Productos y gastos</Typography>
             <Box mt={6} />
             <Box mt={3} />
-            <Button
-               variant='contained'
-               color={'inherit'}
-               startIcon={<AddIcon />}
-               size={'medium'}
-               onClick={() => navigate('/dashboard/item-form')}
-               disabled={loading}
-            >
-               Crear nuevo
-            </Button>
-            <Box mt={2} />
             {loading ? (
                <>
                   <LinearProgress />
@@ -80,8 +69,18 @@ export const Items = () => {
                   <Typography variant='h4'>Todos los productos</Typography>
                   <Box mt={1} />
                   <Divider variant='fullWidth' />
+                  <Box mt={2} />
+                  <Button
+                     variant='contained'
+                     color={'primary'}
+                     startIcon={<AddIcon />}
+                     size={'medium'}
+                     onClick={() => navigate('/dashboard/item-form')}
+                     disabled={loading}
+                  >
+                     Crear nuevo producto
+                  </Button>
                   <Box mt={3} />
-
                   <TableContainer component={Paper}>
                      <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
@@ -144,11 +143,21 @@ export const Items = () => {
                      </Table>
                   </TableContainer>
                   <Box mt={6} />
-                  <Typography variant='h4'>
-                     Resumen de ventas por meses
-                  </Typography>
+                  <Typography variant='h4'>Rendimiento por mes</Typography>
                   <Box mt={1} />
                   <Divider variant='fullWidth' />
+                  <Box mt={2} />
+                  <Button
+                     variant='contained'
+                     color={'primary'}
+                     startIcon={<AddIcon />}
+                     size={'medium'}
+                     onClick={() => navigate('/dashboard/expense-form')}
+                     disabled={loading}
+                  >
+                     Agregar nuevo gasto
+                  </Button>
+                  <Box mt={2} />
                   <Box mt={3} />
                   <MonthlySales sales={sales} expenses={expenses} />
                </>

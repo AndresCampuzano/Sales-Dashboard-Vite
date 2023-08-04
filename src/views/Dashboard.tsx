@@ -58,7 +58,7 @@ export const Dashboard = () => {
                disabled={loading}
                sx={{ marginLeft: 2 }}
             >
-               Productos
+               Productos y gastos
             </Button>
             <Box mt={3} />
             {loading ? (
