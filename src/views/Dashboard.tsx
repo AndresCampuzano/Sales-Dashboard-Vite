@@ -1,4 +1,6 @@
 import { useNavigate } from 'react-router-dom';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import {
    Box,
@@ -17,6 +19,9 @@ export const Dashboard = () => {
    const navigate = useNavigate();
    const [loading, setLoading] = useState<boolean>(true);
    const [sales, setSales] = useState<SalesDataTable[]>([]);
+
+   const theme = useTheme();
+   const isPhoneView = useMediaQuery(theme.breakpoints.up('sm'));
 
    useEffect(() => {
       const fetchData = async () => {
@@ -45,6 +50,7 @@ export const Dashboard = () => {
                variant='contained'
                color={'primary'}
                size={'medium'}
+               fullWidth={!isPhoneView}
                onClick={() => navigate('/dashboard/sale-form')}
                disabled={loading}
             >
@@ -54,11 +60,15 @@ export const Dashboard = () => {
                variant='contained'
                color={'primary'}
                size={'medium'}
+               fullWidth={!isPhoneView}
                onClick={() => navigate('/items')}
                disabled={loading}
-               sx={{ marginLeft: 2 }}
+               sx={{
+                  marginLeft: isPhoneView ? 2 : 0,
+                  marginTop: !isPhoneView ? 2 : 0,
+               }}
             >
-               Productos y gastos
+               Productos y rendimiento
             </Button>
             <Box mt={3} />
             {loading ? (
