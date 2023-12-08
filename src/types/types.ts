@@ -82,6 +82,12 @@ export interface MonthlySalesAndExpensesInterface {
    expenses: number;
 }
 
+export interface monthlyExpensesWithoutSalesInterface {
+   month: string;
+   expenses: number;
+   allExpenses: ExpenseInterface[];
+}
+
 export type ItemList = Item & { color: string };
 
 export interface ExpenseInterface {
@@ -89,6 +95,7 @@ export interface ExpenseInterface {
    name: string;
    price: number;
    type: string;
+   currency: string;
    description?: string;
    created_at?: string;
    updated_at?: string;

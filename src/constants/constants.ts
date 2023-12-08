@@ -69,6 +69,26 @@ export const EXPENSES_TYPES = [
 ];
 
 /**
+ * @description Currencies
+ * @constant
+ * @readonly
+ */
+export const CURRENCIES = [
+   {
+      label: 'Peso Colombiano',
+      value: 'COP',
+   },
+   {
+      label: 'Dolar Australiano',
+      value: 'AUD',
+   },
+   {
+      label: 'Won Coreano',
+      value: 'KRW',
+   },
+];
+
+/**
  * @description Places available for the clients in CO
  * @constant
  * @readonly

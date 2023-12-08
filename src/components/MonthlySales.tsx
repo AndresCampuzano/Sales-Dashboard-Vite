@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
-import { useNavigate } from 'react-router-dom';
 import {
    ExpenseInterface,
+   monthlyExpensesWithoutSalesInterface,
    MonthlySalesAndExpensesInterface,
    SalesDataTable,
 } from '../types/types.ts';
@@ -9,24 +9,16 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { groupSalesByMonth } from '../utils/groupSalesByMonth.ts';
 import {
    Alert,
-   Avatar,
    Card,
    CardContent,
    Grid,
    List,
-   ListItem,
-   ListItemAvatar,
-   ListItemText,
    Snackbar,
    Typography,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { numberFormat } from '../utils/numberFormat.ts';
-import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { ExpenseItem } from './ExpenseItem.tsx';
 
 export const MonthlySales = ({
    sales,
@@ -35,18 +27,24 @@ export const MonthlySales = ({
    sales: SalesDataTable[];
    expenses: ExpenseInterface[];
 }) => {
-   const [data, setData] = useState<MonthlySalesAndExpensesInterface[]>([]);
+   // This State may contain expenses
+   const [salesState, salesDataState] = useState<
+      MonthlySalesAndExpensesInterface[]
+   >([]);
+   // This state relates to expenses without sales
+   const [expensesState, setExpensesState] = useState<
+      monthlyExpensesWithoutSalesInterface[]
+   >([]);
+   // Alert
    const [openAlert, setOpenAlert] = useState(false);
 
-   const navigate = useNavigate();
-
    useEffect(() => {
-      setData(
-         groupSalesByMonth({
-            sales,
-            expenses,
-         })
-      );
+      const { salesWithExpenses, expensesWithoutSales } = groupSalesByMonth({
+         sales,
+         expenses,
+      });
+      salesDataState(salesWithExpenses);
+      setExpensesState(expensesWithoutSales);
    }, [sales, expenses]);
 
    /**
@@ -62,9 +60,13 @@ export const MonthlySales = ({
    /**
     * Copy the object to the clipboard
     */
-   const onCopyObject = (sale: MonthlySalesAndExpensesInterface) => {
+   const onCopyObject = (
+      item:
+         | MonthlySalesAndExpensesInterface
+         | monthlyExpensesWithoutSalesInterface
+   ) => {
       try {
-         navigator.clipboard.writeText(JSON.stringify(sale));
+         navigator.clipboard.writeText(JSON.stringify(item));
          onAlertClick();
       } catch (e) {
          console.error(e);
@@ -89,7 +91,58 @@ export const MonthlySales = ({
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
          >
-            {data.map((x) => (
+            {expensesState.map((x) => (
+               <Grid key={x.month} xs={12} sm={4} md={4} item>
+                  <Card sx={{ minWidth: 275 }}>
+                     <CardContent>
+                        <Typography
+                           sx={{ fontSize: 14 }}
+                           color='text.secondary'
+                           gutterBottom
+                        >
+                           {localizeMonth(x.month)}
+                        </Typography>
+                        <Typography
+                           variant='h5'
+                           component='div'
+                           color={x.expenses < 0 ? 'red' : 'inherit'}
+                        >
+                           {numberFormat(x.expenses)}
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                           {x.allExpenses.length > 1
+                              ? `${x.allExpenses.length} gastos`
+                              : `${x.allExpenses.length} gasto`}{' '}
+                           <ContentCopyIcon
+                              fontSize={'small'}
+                              onClick={() => onCopyObject(x)}
+                           />
+                        </Typography>
+                        {
+                           <>
+                              <List
+                                 sx={{
+                                    width: '100%',
+                                 }}
+                              >
+                                 {x.allExpenses.map((y) => (
+                                    <ExpenseItem item={y} key={y._id} />
+                                 ))}
+                              </List>
+                              <Typography
+                                 sx={{ mb: 1.5 }}
+                                 color='text.secondary'
+                              >
+                                 Suma de los gastos:{' '}
+                                 {numberFormat(Math.abs(x.expenses))}
+                              </Typography>
+                           </>
+                        }
+                     </CardContent>
+                  </Card>
+               </Grid>
+            ))}
+            {salesState.map((x) => (
                <Grid key={x.month} xs={12} sm={4} md={4} item>
                   <Card sx={{ minWidth: 275 }}>
                      <CardContent>
@@ -131,36 +184,7 @@ export const MonthlySales = ({
                                  }}
                               >
                                  {x.allExpenses.map((y) => (
-                                    <ListItem key={y._id}>
-                                       <ListItemAvatar>
-                                          <Avatar>
-                                             {y.type === 'instagram_ad' ? (
-                                                <InstagramIcon />
-                                             ) : y.type === 'facebook_ad' ? (
-                                                <FacebookIcon />
-                                             ) : (
-                                                <AttachMoneyIcon />
-                                             )}
-                                          </Avatar>
-                                       </ListItemAvatar>
-                                       <ListItemText
-                                          primary={y.name}
-                                          secondary={
-                                             '- ' + numberFormat(y.price)
-                                          }
-                                       />
-                                       <IconButton
-                                          edge='end'
-                                          aria-label='edit'
-                                          onClick={() =>
-                                             navigate(
-                                                `/dashboard/expense-form?id=${y._id}`
-                                             )
-                                          }
-                                       >
-                                          <EditIcon />
-                                       </IconButton>
-                                    </ListItem>
+                                    <ExpenseItem item={y} key={y._id} />
                                  ))}
                               </List>
                               <Typography
