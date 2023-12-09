@@ -93,11 +93,7 @@ export const MonthlySales = ({
       return (
          <>
             {expense.areAllCurrenciesCOP ? (
-               <Typography
-                  variant='h5'
-                  component='div'
-                  color={expense.expenses < 0 ? 'red' : 'inherit'}
-               >
+               <Typography variant='h5' component='div' color={'inherit'}>
                   {numberFormat(expense.expenses)}
                </Typography>
             ) : (
@@ -197,13 +193,19 @@ export const MonthlySales = ({
                         >
                            {localizeMonth(x.month)}
                         </Typography>
-                        <Typography
-                           variant='h5'
-                           component='div'
-                           color={x.revenue < 0 ? 'red' : 'inherit'}
-                        >
-                           {numberFormat(x.revenue)}
-                        </Typography>
+
+                        {x.revenue ? (
+                           <Typography
+                              variant='h5'
+                              component='div'
+                              color={x.revenue < 0 ? 'red' : 'inherit'}
+                           >
+                              {numberFormat(x.revenue)}
+                           </Typography>
+                        ) : (
+                           <>{expensesSummaryUI(x)}</>
+                        )}
+
                         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
                            {x.allItems.length > 1
                               ? `${x.allItems.length} ventas`
