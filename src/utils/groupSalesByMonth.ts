@@ -23,10 +23,13 @@ export function groupSalesByMonth({
    // Create an empty array to store monthly sales and expenses data.
    const monthlySales: Omit<
       MonthlySalesAndExpensesInterface,
-      'revenueWithoutExpenses' | 'expenses'
+      'revenueWithoutExpenses' | 'expenses' | 'areAllCurrenciesCOP'
    >[] = [];
    // Create an empty array to store monthly expenses when there are no monthly sales
-   const expensesWithoutSales: monthlyExpensesWithoutSalesInterface[] = [];
+   const expensesWithoutSales: Omit<
+      monthlyExpensesWithoutSalesInterface,
+      'areAllCurrenciesCOP'
+   >[] = [];
 
    // Loop through each sale data in the sales array.
    for (const sale of sales) {
@@ -101,6 +104,53 @@ export function groupSalesByMonth({
       }
    }
 
+   /**
+    * Checks if all currencies are COP
+    */
+   const areAllCurrenciesCOPfunc = (items: ExpenseInterface[]): boolean => {
+      return items.every((expense) => {
+         // If there is no currency, it belongs to COP value
+         if (!expense.currency) {
+            return true;
+         } else {
+            return expense.currency === 'COP';
+         }
+      });
+   };
+
+   /**
+    * Sorts all expenses by currency
+    */
+   const sortExpensesByCurrency = (items: ExpenseInterface[]) => {
+      const expensesWithCurrency = items.map((x) => ({
+         ...x,
+         currency: x.currency || 'COP',
+      }));
+
+      type sortedExpensesType = {
+         currencyKey: string;
+         items: ExpenseInterface[];
+      };
+
+      const sortedExpenses: sortedExpensesType[] = [];
+
+      expensesWithCurrency.forEach((item) => {
+         const existingCurrency = sortedExpenses.find(
+            (x) => x.currencyKey === item.currency
+         );
+
+         if (existingCurrency) {
+            existingCurrency.items.push(item);
+         } else {
+            sortedExpenses.push({
+               currencyKey: item.currency,
+               items: [item],
+            });
+         }
+      });
+      return sortedExpenses;
+   };
+
    return {
       // Calculate profit for each month and return the updated data.
       salesWithExpenses: monthlySales.map((x) => {
@@ -108,17 +158,20 @@ export function groupSalesByMonth({
          const expenses = x.allExpenses.reduce((a, b) => a + b.price, 0);
          return {
             ...x,
-            revenue: sales - expenses,
+            revenue: sales - expenses, // This is useless if areAllCurrenciesCOP = true
             revenueWithoutExpenses: sales,
-            expenses: expenses,
+            expenses: expenses, // This is useless if areAllCurrenciesCOP = true
+            areAllCurrenciesCOP: areAllCurrenciesCOPfunc(x.allExpenses),
+            sortedExpenses: sortExpensesByCurrency(x.allExpenses),
          };
       }),
       // Expenses without sales in the month
       expensesWithoutSales: expensesWithoutSales.map((x) => ({
          ...x,
          // Converts expenses into negative value
-         // DEPRECATED - Improve multiple currencies
-         expenses: -Math.abs(x.expenses),
+         expenses: -Math.abs(x.expenses), // This is useless if areAllCurrenciesCOP = true
+         areAllCurrenciesCOP: areAllCurrenciesCOPfunc(x.allExpenses),
+         sortedExpenses: sortExpensesByCurrency(x.allExpenses),
       })),
    };
 }

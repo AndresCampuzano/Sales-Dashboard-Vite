@@ -9,6 +9,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { groupSalesByMonth } from '../utils/groupSalesByMonth.ts';
 import {
    Alert,
+   Box,
    Card,
    CardContent,
    Grid,
@@ -129,13 +130,24 @@ export const MonthlySales = ({
                                     <ExpenseItem item={y} key={y._id} />
                                  ))}
                               </List>
-                              <Typography
-                                 sx={{ mb: 1.5 }}
-                                 color='text.secondary'
-                              >
-                                 Suma de los gastos:{' '}
-                                 {numberFormat(Math.abs(x.expenses))}
-                              </Typography>
+
+                              <Box mt={2} />
+                              {!x.areAllCurrenciesCOP ? (
+                                 <Alert severity='warning'>
+                                    No se puede sumar los gasto del mes debido a
+                                    que hay diferentes divisas.
+                                 </Alert>
+                              ) : (
+                                 <>
+                                    <Typography
+                                       sx={{ mb: 1.5 }}
+                                       color='text.secondary'
+                                    >
+                                       Suma de los gastos:{' '}
+                                       {numberFormat(Math.abs(x.expenses))}
+                                    </Typography>
+                                 </>
+                              )}
                            </>
                         }
                      </CardContent>
@@ -187,12 +199,22 @@ export const MonthlySales = ({
                                     <ExpenseItem item={y} key={y._id} />
                                  ))}
                               </List>
-                              <Typography
-                                 sx={{ mb: 1.5 }}
-                                 color='text.secondary'
-                              >
-                                 Suma de los gastos: {numberFormat(x.expenses)}
-                              </Typography>
+                              {!x.areAllCurrenciesCOP ? (
+                                 <Alert severity='warning'>
+                                    No se puede sumar los gasto del mes debido a
+                                    que hay diferentes divisas.
+                                 </Alert>
+                              ) : (
+                                 <>
+                                    <Typography
+                                       sx={{ mb: 1.5 }}
+                                       color='text.secondary'
+                                    >
+                                       Suma de los gastos:{' '}
+                                       {numberFormat(Math.abs(x.expenses))}
+                                    </Typography>
+                                 </>
+                              )}
                            </>
                         )}
                      </CardContent>

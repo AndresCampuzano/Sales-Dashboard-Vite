@@ -79,12 +79,14 @@ export interface MonthlySalesAndExpensesInterface {
    revenue: number;
    revenueWithoutExpenses: number;
    allExpenses: ExpenseInterface[];
+   areAllCurrenciesCOP: boolean;
    expenses: number;
 }
 
 export interface monthlyExpensesWithoutSalesInterface {
    month: string;
    expenses: number;
+   areAllCurrenciesCOP: boolean;
    allExpenses: ExpenseInterface[];
 }
 
