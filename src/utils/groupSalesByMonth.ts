@@ -23,12 +23,15 @@ export function groupSalesByMonth({
    // Create an empty array to store monthly sales and expenses data.
    const monthlySales: Omit<
       MonthlySalesAndExpensesInterface,
-      'revenueWithoutExpenses' | 'expenses' | 'areAllCurrenciesCOP'
+      | 'revenueWithoutExpenses'
+      | 'expenses'
+      | 'areAllCurrenciesCOP'
+      | 'sortedExpenses'
    >[] = [];
    // Create an empty array to store monthly expenses when there are no monthly sales
    const expensesWithoutSales: Omit<
       monthlyExpensesWithoutSalesInterface,
-      'areAllCurrenciesCOP'
+      'areAllCurrenciesCOP' | 'sortedExpenses'
    >[] = [];
 
    // Loop through each sale data in the sales array.

@@ -85,6 +85,42 @@ export const MonthlySales = ({
       setOpenAlert(false);
    };
 
+   const expensesSummaryUI = (
+      expense:
+         | monthlyExpensesWithoutSalesInterface
+         | MonthlySalesAndExpensesInterface
+   ) => {
+      return (
+         <>
+            {expense.areAllCurrenciesCOP ? (
+               <Typography
+                  variant='h5'
+                  component='div'
+                  color={expense.expenses < 0 ? 'red' : 'inherit'}
+               >
+                  {numberFormat(expense.expenses)}
+               </Typography>
+            ) : (
+               <>
+                  {expense.sortedExpenses.map((exp) => (
+                     <Typography
+                        key={exp.currencyKey}
+                        variant='h5'
+                        component='div'
+                        color='inherit'
+                     >
+                        {numberFormat(
+                           exp.items.reduce((a, b) => a + b.price, 0),
+                           exp.currencyKey
+                        )}
+                     </Typography>
+                  ))}
+               </>
+            )}
+         </>
+      );
+   };
+
    return (
       <>
          <Grid
@@ -103,13 +139,9 @@ export const MonthlySales = ({
                         >
                            {localizeMonth(x.month)}
                         </Typography>
-                        <Typography
-                           variant='h5'
-                           component='div'
-                           color={x.expenses < 0 ? 'red' : 'inherit'}
-                        >
-                           {numberFormat(x.expenses)}
-                        </Typography>
+
+                        {expensesSummaryUI(x)}
+
                         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
                            {x.allExpenses.length > 1
                               ? `${x.allExpenses.length} gastos`
