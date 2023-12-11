@@ -137,8 +137,8 @@ export const MonthlySales = ({
                         )}
                         <>
                            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                              {numberFormat(x.revenueWithoutExpenses)} sin
-                              gastos.
+                              {numberFormat(x.revenueWithoutExpenses)}{' '}
+                              excluyendo gastos.
                            </Typography>
                            <List
                               sx={{
