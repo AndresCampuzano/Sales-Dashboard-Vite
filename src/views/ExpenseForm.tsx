@@ -20,6 +20,10 @@ import {
    Radio,
    FormControl,
    InputAdornment,
+   MenuItem,
+   InputLabel,
+   Select,
+   SelectChangeEvent,
 } from '@mui/material';
 import { ExpenseInterface } from '../types/types';
 import SendIcon from '@mui/icons-material/Send';
@@ -31,7 +35,7 @@ import {
    postExpense,
    updateExpense,
 } from '../services/expense.service.ts';
-import { EXPENSES_TYPES } from '../constants/constants.ts';
+import { CURRENCIES, EXPENSES_TYPES } from '../constants/constants.ts';
 
 export const ExpenseForm = () => {
    const [loading, setLoading] = useState<boolean>(true);
@@ -45,6 +49,7 @@ export const ExpenseForm = () => {
    const [name, setName] = useState<string>('');
    const [type, setType] = useState<string>('');
    const [price, setPrice] = useState<number>(20000);
+   const [currency, setCurrency] = useState<string>('');
    const [description, setDescription] = useState<string>('');
 
    const [searchParams] = useSearchParams();
@@ -78,6 +83,7 @@ export const ExpenseForm = () => {
             setType(data.type);
             setPrice(data.price);
             setDescription(data?.description || '');
+            setCurrency(data?.currency || CURRENCIES[0].value);
          } catch (e) {
             setIsEditing(false);
             setType(EXPENSES_TYPES[0].value);
@@ -95,10 +101,22 @@ export const ExpenseForm = () => {
       const validation: boolean =
          type.trim().length > 0 && type === 'other'
             ? name.trim().length > 0
-            : true && price > 0;
+            : price > 0;
 
       setIsBtnValid(validation);
    }, [name, type, price]);
+
+   /**
+    * Loads currency options
+    */
+   useEffect(() => {
+      if (isEditing) return;
+      setCurrency(CURRENCIES[0].value);
+   }, [isEditing]);
+
+   const onChangeCurrency = (event: SelectChangeEvent) => {
+      setCurrency(event.target.value as string);
+   };
 
    const onChangeType = (e: React.ChangeEvent<HTMLInputElement>) => {
       setType(e.target.value);
@@ -113,7 +131,7 @@ export const ExpenseForm = () => {
       if (e.target.value === '') {
          setPrice(0);
       } else {
-         setPrice(parseInt(e.target.value));
+         setPrice(Number(e.target.value));
       }
    };
 
@@ -134,6 +152,7 @@ export const ExpenseForm = () => {
          type,
          price,
          description,
+         currency,
       };
 
       try {
@@ -231,7 +250,7 @@ export const ExpenseForm = () => {
                            </RadioGroup>
                         </FormControl>
                         <Box mt={2} />
-                        {type === 'other' ? (
+                        {type === 'other' && (
                            <>
                               <TextField
                                  id='outlined-basic-name'
@@ -245,7 +264,33 @@ export const ExpenseForm = () => {
                               />
                               <Box mt={2} />
                            </>
-                        ) : null}
+                        )}
+                        <FormControl fullWidth>
+                           <InputLabel id='currency-select-label'>
+                              Divisa
+                           </InputLabel>
+                           <Select
+                              id='currency-select'
+                              labelId='currency-select-label'
+                              value={currency}
+                              label='Divisa'
+                              onChange={onChangeCurrency}
+                              variant={'outlined'}
+                              size={'small'}
+                              fullWidth
+                              required
+                           >
+                              {CURRENCIES.map((currency) => (
+                                 <MenuItem
+                                    key={currency.value}
+                                    value={currency.value}
+                                 >
+                                    {currency.value}
+                                 </MenuItem>
+                              ))}
+                           </Select>
+                        </FormControl>
+                        <Box mt={2} />
                         <TextField
                            id='outlined-basic'
                            label='Valor'

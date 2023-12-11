@@ -75,15 +75,15 @@ export const EXPENSES_TYPES = [
  */
 export const CURRENCIES = [
    {
-      label: 'Peso Colombiano',
-      value: 'COP',
+      // label: 'Peso Colombiano',
+      value: 'COP', // Default currency
    },
    {
-      label: 'Dolar Australiano',
+      // label: 'Dolar Australiano',
       value: 'AUD',
    },
    {
-      label: 'Won Coreano',
+      // label: 'Won Coreano',
       value: 'KRW',
    },
 ];

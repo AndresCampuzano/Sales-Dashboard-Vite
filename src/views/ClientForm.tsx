@@ -82,7 +82,6 @@ export const ClientForm = () => {
             setInstagramAccount(data.instagram_account);
             setAddress(data.address);
             setSelectedDepartment(data.department);
-            console.log(data.city);
             setSelectedCity(data.city);
             setPhone(data.phone.toString());
          } catch (e) {
