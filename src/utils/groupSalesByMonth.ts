@@ -1,13 +1,12 @@
 import {
    ExpenseInterface,
-   monthlyExpensesWithoutSalesInterface,
    MonthlySalesAndExpensesInterface,
    SalesDataTable,
 } from '../types/types.ts';
+import { sortArrayByMonthAndYear } from './dates.ts';
 
 interface groupSalesByMonthInterface {
    salesWithExpenses: MonthlySalesAndExpensesInterface[];
-   expensesWithoutSales: monthlyExpensesWithoutSalesInterface[];
 }
 
 /**
@@ -28,11 +27,6 @@ export function groupSalesByMonth({
       | 'areAllCurrenciesCOP'
       | 'sortedExpenses'
    >[] = [];
-   // Create an empty array to store monthly expenses when there are no monthly sales
-   const expensesWithoutSales: Omit<
-      monthlyExpensesWithoutSalesInterface,
-      'areAllCurrenciesCOP' | 'sortedExpenses'
-   >[] = [];
 
    // Loop through each sale data in the sales array.
    for (const sale of sales) {
@@ -47,8 +41,10 @@ export function groupSalesByMonth({
 
       // If the month already exists in the monthlySales array, add the sale data to its allItems array and update the revenue.
       if (existingMonth) {
-         existingMonth.allItems.push(sale);
-         existingMonth.revenue += sale.totalPrice;
+         if (existingMonth.allItems && existingMonth.revenue) {
+            existingMonth.allItems.push(sale);
+            existingMonth.revenue += sale.totalPrice;
+         }
       } else {
          // If the month doesn't exist in the monthlySales array, create a new MonthlySalesInterface object.
          monthlySales.push({
@@ -80,7 +76,7 @@ export function groupSalesByMonth({
          month: 'long',
       })} ${expenseDate.getFullYear()}`;
 
-      const existingMonth = expensesWithoutSales.find(
+      const existingMonth = monthlySales.find(
          (monthlySale) => monthlySale.month === monthKey
       );
 
@@ -96,11 +92,9 @@ export function groupSalesByMonth({
       if (!isSomeOnIt) {
          if (existingMonth) {
             existingMonth.allExpenses.push(expense);
-            existingMonth.expenses += expense.price;
          } else {
-            expensesWithoutSales.push({
+            monthlySales.push({
                month: monthKey,
-               expenses: expense.price,
                allExpenses: [expense],
             });
          }
@@ -154,27 +148,23 @@ export function groupSalesByMonth({
       return sortedExpenses;
    };
 
-   return {
-      // Calculate profit for each month and return the updated data.
-      salesWithExpenses: monthlySales.map((x) => {
-         const sales = x.revenue;
-         const expenses = x.allExpenses.reduce((a, b) => a + b.price, 0);
-         return {
-            ...x,
-            revenue: sales - expenses, // This is useless if areAllCurrenciesCOP = true
-            revenueWithoutExpenses: sales,
-            expenses: expenses, // This is useless if areAllCurrenciesCOP = true
-            areAllCurrenciesCOP: areAllCurrenciesCOPfunc(x.allExpenses),
-            sortedExpenses: sortExpensesByCurrency(x.allExpenses),
-         };
-      }),
-      // Expenses without sales in the month
-      expensesWithoutSales: expensesWithoutSales.map((x) => ({
+   // Calculate profit for each month and return the updated data.
+
+   const salesWithExpenses = monthlySales.map((x) => {
+      const sales = x.revenue || 0;
+      const expenses = x.allExpenses.reduce((a, b) => a + b.price, 0);
+      return {
          ...x,
-         // Converts expenses into negative value
-         expenses: -Math.abs(x.expenses), // This is useless if areAllCurrenciesCOP = true
+         revenue: sales - expenses, // This is useless if areAllCurrenciesCOP = true
+         revenueWithoutExpenses: sales,
+         expenses: expenses, // This is useless if areAllCurrenciesCOP = true
          areAllCurrenciesCOP: areAllCurrenciesCOPfunc(x.allExpenses),
          sortedExpenses: sortExpensesByCurrency(x.allExpenses),
-      })),
+      };
+   });
+
+   return {
+      // Sort the array of objects using the custom comparator function
+      salesWithExpenses: sortArrayByMonthAndYear(salesWithExpenses),
    };
 }

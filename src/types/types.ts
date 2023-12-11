@@ -75,8 +75,8 @@ export interface SalesDataTable {
 
 export interface MonthlySalesAndExpensesInterface {
    month: string;
-   allItems: SalesDataTable[];
-   revenue: number;
+   allItems?: SalesDataTable[];
+   revenue?: number;
    revenueWithoutExpenses: number;
    allExpenses: ExpenseInterface[];
    sortedExpenses: {
@@ -85,17 +85,6 @@ export interface MonthlySalesAndExpensesInterface {
    }[];
    areAllCurrenciesCOP: boolean;
    expenses: number;
-}
-
-export interface monthlyExpensesWithoutSalesInterface {
-   month: string;
-   expenses: number;
-   areAllCurrenciesCOP: boolean;
-   sortedExpenses: {
-      currencyKey: string;
-      items: ExpenseInterface[];
-   }[];
-   allExpenses: ExpenseInterface[];
 }
 
 export type ItemList = Item & { color: string };

@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 import {
    ExpenseInterface,
-   monthlyExpensesWithoutSalesInterface,
    MonthlySalesAndExpensesInterface,
    SalesDataTable,
 } from '../types/types.ts';
@@ -9,7 +8,6 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { groupSalesByMonth } from '../utils/groupSalesByMonth.ts';
 import {
    Alert,
-   Box,
    Card,
    CardContent,
    Grid,
@@ -28,24 +26,18 @@ export const MonthlySales = ({
    sales: SalesDataTable[];
    expenses: ExpenseInterface[];
 }) => {
-   // This State may contain expenses
    const [salesState, salesDataState] = useState<
       MonthlySalesAndExpensesInterface[]
-   >([]);
-   // This state relates to expenses without sales
-   const [expensesState, setExpensesState] = useState<
-      monthlyExpensesWithoutSalesInterface[]
    >([]);
    // Alert
    const [openAlert, setOpenAlert] = useState(false);
 
    useEffect(() => {
-      const { salesWithExpenses, expensesWithoutSales } = groupSalesByMonth({
+      const { salesWithExpenses } = groupSalesByMonth({
          sales,
          expenses,
       });
       salesDataState(salesWithExpenses);
-      setExpensesState(expensesWithoutSales);
    }, [sales, expenses]);
 
    /**
@@ -61,11 +53,7 @@ export const MonthlySales = ({
    /**
     * Copy the object to the clipboard
     */
-   const onCopyObject = (
-      item:
-         | MonthlySalesAndExpensesInterface
-         | monthlyExpensesWithoutSalesInterface
-   ) => {
+   const onCopyObject = (item: MonthlySalesAndExpensesInterface) => {
       try {
          navigator.clipboard.writeText(JSON.stringify(item));
          onAlertClick();
@@ -85,34 +73,22 @@ export const MonthlySales = ({
       setOpenAlert(false);
    };
 
-   const expensesSummaryUI = (
-      expense:
-         | monthlyExpensesWithoutSalesInterface
-         | MonthlySalesAndExpensesInterface
-   ) => {
+   const expensesSummaryUI = (expense: MonthlySalesAndExpensesInterface) => {
       return (
          <>
-            {expense.areAllCurrenciesCOP ? (
-               <Typography variant='h5' component='div' color={'inherit'}>
-                  {numberFormat(expense.expenses)}
+            {expense.sortedExpenses.map((exp) => (
+               <Typography
+                  key={exp.currencyKey}
+                  variant='h5'
+                  component='div'
+                  color='inherit'
+               >
+                  {numberFormat(
+                     exp.items.reduce((a, b) => a + b.price, 0),
+                     exp.currencyKey
+                  )}
                </Typography>
-            ) : (
-               <>
-                  {expense.sortedExpenses.map((exp) => (
-                     <Typography
-                        key={exp.currencyKey}
-                        variant='h5'
-                        component='div'
-                        color='inherit'
-                     >
-                        {numberFormat(
-                           exp.items.reduce((a, b) => a + b.price, 0),
-                           exp.currencyKey
-                        )}
-                     </Typography>
-                  ))}
-               </>
-            )}
+            ))}
          </>
       );
    };
@@ -124,64 +100,6 @@ export const MonthlySales = ({
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
          >
-            {expensesState.map((x) => (
-               <Grid key={x.month} xs={12} sm={4} md={4} item>
-                  <Card sx={{ minWidth: 275 }}>
-                     <CardContent>
-                        <Typography
-                           sx={{ fontSize: 14 }}
-                           color='text.secondary'
-                           gutterBottom
-                        >
-                           {localizeMonth(x.month)}
-                        </Typography>
-
-                        {expensesSummaryUI(x)}
-
-                        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                           {x.allExpenses.length > 1
-                              ? `${x.allExpenses.length} gastos`
-                              : `${x.allExpenses.length} gasto`}{' '}
-                           <ContentCopyIcon
-                              fontSize={'small'}
-                              onClick={() => onCopyObject(x)}
-                           />
-                        </Typography>
-                        {
-                           <>
-                              <List
-                                 sx={{
-                                    width: '100%',
-                                 }}
-                              >
-                                 {x.allExpenses.map((y) => (
-                                    <ExpenseItem item={y} key={y._id} />
-                                 ))}
-                              </List>
-
-                              <Box mt={2} />
-                              {!x.areAllCurrenciesCOP ? (
-                                 <Alert severity='warning'>
-                                    No se puede sumar los gasto del mes debido a
-                                    que hay diferentes divisas.
-                                 </Alert>
-                              ) : (
-                                 <>
-                                    <Typography
-                                       sx={{ mb: 1.5 }}
-                                       color='text.secondary'
-                                    >
-                                       Suma de los gastos:{' '}
-                                       {numberFormat(Math.abs(x.expenses))}
-                                    </Typography>
-                                 </>
-                              )}
-                           </>
-                        }
-                     </CardContent>
-                  </Card>
-               </Grid>
-            ))}
             {salesState.map((x) => (
                <Grid key={x.month} xs={12} sm={4} md={4} item>
                   <Card sx={{ minWidth: 275 }}>
@@ -194,7 +112,7 @@ export const MonthlySales = ({
                            {localizeMonth(x.month)}
                         </Typography>
 
-                        {x.revenue ? (
+                        {x.areAllCurrenciesCOP && x.revenue ? (
                            <Typography
                               variant='h5'
                               component='div'
@@ -206,51 +124,48 @@ export const MonthlySales = ({
                            <>{expensesSummaryUI(x)}</>
                         )}
 
-                        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                           {x.allItems.length > 1
-                              ? `${x.allItems.length} ventas`
-                              : `${x.allItems.length} venta`}{' '}
-                           <ContentCopyIcon
-                              fontSize={'small'}
-                              onClick={() => onCopyObject(x)}
-                           />
-                        </Typography>
-                        {x.expenses > 0 && (
-                           <>
-                              <Typography
-                                 sx={{ mb: 1.5 }}
-                                 color='text.secondary'
-                              >
-                                 {numberFormat(x.revenueWithoutExpenses)} sin
-                                 gastos.
-                              </Typography>
-                              <List
-                                 sx={{
-                                    width: '100%',
-                                 }}
-                              >
-                                 {x.allExpenses.map((y) => (
-                                    <ExpenseItem item={y} key={y._id} />
-                                 ))}
-                              </List>
-                              {!x.areAllCurrenciesCOP ? (
-                                 <Alert severity='warning'>
-                                    No se puede sumar los gasto del mes debido a
-                                    que hay diferentes divisas.
-                                 </Alert>
-                              ) : (
-                                 <>
-                                    <Typography
-                                       sx={{ mb: 1.5 }}
-                                       color='text.secondary'
-                                    >
-                                       Suma de los gastos:{' '}
-                                       {numberFormat(Math.abs(x.expenses))}
-                                    </Typography>
-                                 </>
-                              )}
-                           </>
+                        {x.allItems && (
+                           <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                              {x.allItems?.length > 1
+                                 ? `${x.allItems.length} ventas`
+                                 : `${x.allItems?.length} venta`}{' '}
+                              <ContentCopyIcon
+                                 fontSize={'small'}
+                                 onClick={() => onCopyObject(x)}
+                              />
+                           </Typography>
                         )}
+                        <>
+                           <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+                              {numberFormat(x.revenueWithoutExpenses)} sin
+                              gastos.
+                           </Typography>
+                           <List
+                              sx={{
+                                 width: '100%',
+                              }}
+                           >
+                              {x.allExpenses.map((y) => (
+                                 <ExpenseItem item={y} key={y._id} />
+                              ))}
+                           </List>
+                           {!x.areAllCurrenciesCOP ? (
+                              <Alert severity='warning'>
+                                 No se puede sumar los gastos del mes debido a
+                                 que hay diferentes divisas.
+                              </Alert>
+                           ) : (
+                              <>
+                                 <Typography
+                                    sx={{ mb: 1.5 }}
+                                    color='text.secondary'
+                                 >
+                                    Suma de los gastos:{' '}
+                                    {numberFormat(Math.abs(x.expenses))}
+                                 </Typography>
+                              </>
+                           )}
+                        </>
                      </CardContent>
                   </Card>
                </Grid>
