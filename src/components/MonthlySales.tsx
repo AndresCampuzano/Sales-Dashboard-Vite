@@ -76,6 +76,7 @@ export const MonthlySales = ({
    const expensesSummaryUI = (expense: MonthlySalesAndExpensesInterface) => {
       return (
          <>
+            <Alert severity='info'>Gastos</Alert>
             {expense.sortedExpenses.map((exp) => (
                <Typography
                   key={exp.currencyKey}
