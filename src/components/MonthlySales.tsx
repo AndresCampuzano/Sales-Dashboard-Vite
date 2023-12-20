@@ -89,37 +89,36 @@ export const MonthlySales = ({
 
       return (
          <>
-            <Alert severity='warning'>
-               Gastos:
-               {expense.sortedExpenses.map((exp) => (
-                  <Typography
-                     key={exp.currencyKey}
-                     variant='h5'
-                     component='div'
-                     color='inherit'
-                  >
+            {expense.sortedExpenses.length > 0 && (
+               <Alert severity='warning'>
+                  Gastos:
+                  {expense.sortedExpenses.map((exp) => (
+                     <Typography
+                        key={exp.currencyKey}
+                        variant='h5'
+                        component='div'
+                        color='inherit'
+                     >
+                        {currencyFormat(
+                           exp.items.reduce((a, b) => a + b.price, 0),
+                           exp.currencyKey
+                        )}
+                     </Typography>
+                  ))}
+               </Alert>
+            )}
+            {expense.revenueWithoutExpenses - totalExpensesWithCurrency > 0 && (
+               <Alert severity='success'>
+                  Ganancias:{' '}
+                  <Typography variant='h5' component='div' color='inherit'>
                      {currencyFormat(
-                        exp.items.reduce((a, b) => a + b.price, 0),
-                        exp.currencyKey
+                        expense.revenueWithoutExpenses -
+                           totalExpensesWithCurrency,
+                        CURRENCIES[0].value
                      )}
                   </Typography>
-               ))}
-            </Alert>
-            <Alert severity='success'>
-               Ganancias:{' '}
-               <Typography variant='h5' component='div' color='inherit'>
-                  {expense.revenueWithoutExpenses - totalExpensesWithCurrency >
-                     0 && (
-                     <>
-                        {currencyFormat(
-                           expense.revenueWithoutExpenses -
-                              totalExpensesWithCurrency,
-                           CURRENCIES[0].value
-                        )}
-                     </>
-                  )}
-               </Typography>
-            </Alert>
+               </Alert>
+            )}
          </>
       );
    };
@@ -143,22 +142,7 @@ export const MonthlySales = ({
                            {localizeMonth(x.month)}
                         </Typography>
 
-                        {x.areAllCurrenciesCOP && x.revenue ? (
-                           <Alert
-                              severity={x.revenue < 0 ? 'warning' : 'success'}
-                           >
-                              {x.revenue < 0 ? 'Gastos' : 'Ganancias'}
-                              <Typography
-                                 variant='h5'
-                                 component='div'
-                                 color='inherit'
-                              >
-                                 {currencyFormat(x.revenue, undefined, true)}
-                              </Typography>
-                           </Alert>
-                        ) : (
-                           <>{expensesSummaryUI(x)}</>
-                        )}
+                        {expensesSummaryUI(x)}
 
                         {x.allItems && (
                            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
