@@ -2,7 +2,15 @@
  * Formats a number to any currency
  * @example 45000 -> $45.000
  */
-export const numberFormat = (value: number, currency?: string): string => {
+export const currencyFormat = (
+   value: number,
+   currency?: string,
+   convertToPositive?: boolean
+): string => {
+   if (convertToPositive && value < 0) {
+      value = Math.abs(value);
+   }
+
    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       minimumFractionDigits: 0,

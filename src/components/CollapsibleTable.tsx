@@ -12,7 +12,7 @@ import TableBody from '@mui/material/TableBody';
 import Paper from '@mui/material/Paper';
 import TableContainer from '@mui/material/TableContainer';
 import { SalesDataTable } from '../types/types.ts';
-import { numberFormat } from '../utils/numberFormat.ts';
+import { currencyFormat } from '../utils/currencyFormat.ts';
 import { CustomChip } from './CustomChip.tsx';
 import { DateTime } from 'luxon';
 
@@ -73,7 +73,7 @@ const Row = (props: { row: SalesDataTable }) => {
                   />
                )}
             </TableCell>
-            <TableCell>{numberFormat(row.totalPrice)}</TableCell>
+            <TableCell>{currencyFormat(row.totalPrice)}</TableCell>
             <TableCell>{row.city}</TableCell>
             <TableCell>
                <div style={{ textAlign: 'center', width: 'fit-content' }}>
@@ -127,7 +127,7 @@ const Row = (props: { row: SalesDataTable }) => {
                                     <CustomChip color={item.color} />
                                  </TableCell>
                                  <TableCell>
-                                    {numberFormat(item.price)}
+                                    {currencyFormat(item.price)}
                                  </TableCell>
                               </TableRow>
                            ))}

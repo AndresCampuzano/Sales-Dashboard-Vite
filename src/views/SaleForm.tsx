@@ -34,7 +34,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SendIcon from '@mui/icons-material/Send';
 import { Client, Item, ItemList, Sale } from '../types/types';
 import { Link, useNavigate } from 'react-router-dom';
-import { numberFormat } from '../utils/numberFormat';
+import { currencyFormat } from '../utils/currencyFormat.ts';
 import { getClients } from '../services/client.service';
 import { getItems } from '../services/item.service';
 import { postSale } from '../services/sale.service';
@@ -749,7 +749,7 @@ export const SaleForm = () => {
                   <br />
                   <b>
                      Ganancias:{' '}
-                     {numberFormat(itemList.reduce((a, b) => a + b.price, 0))}
+                     {currencyFormat(itemList.reduce((a, b) => a + b.price, 0))}
                   </b>
                   {isSendingData && <LinearProgress />}
                </DialogContentText>

@@ -2,7 +2,7 @@ import { Avatar, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { numberFormat } from '../utils/numberFormat.ts';
+import { currencyFormat } from '../utils/currencyFormat.ts';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ export const ExpenseItem = ({ item }: { item: ExpenseInterface }) => {
          </ListItemAvatar>
          <ListItemText
             primary={item.name}
-            secondary={'- ' + numberFormat(item.price, item.currency)}
+            secondary={'- ' + currencyFormat(item.price, item.currency)}
          />
          <IconButton
             edge='end'

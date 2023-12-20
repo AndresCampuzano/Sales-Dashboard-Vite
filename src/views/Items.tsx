@@ -17,7 +17,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import { numberFormat } from '../utils/numberFormat.ts';
+import { currencyFormat } from '../utils/currencyFormat.ts';
 import { colorFromConstants } from '../utils/colorFromConstants.ts';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -100,7 +100,7 @@ export const Items = () => {
                                  </TableCell>
                                  <TableCell align='left'>{row.name}</TableCell>
                                  <TableCell align='left'>
-                                    {numberFormat(row.price)}
+                                    {currencyFormat(row.price)}
                                  </TableCell>
                                  <TableCell align='left'>
                                     <>

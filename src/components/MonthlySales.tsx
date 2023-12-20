@@ -16,7 +16,7 @@ import {
    Typography,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { numberFormat } from '../utils/numberFormat.ts';
+import { currencyFormat } from '../utils/currencyFormat.ts';
 import { ExpenseItem } from './ExpenseItem.tsx';
 
 export const MonthlySales = ({
@@ -76,20 +76,22 @@ export const MonthlySales = ({
    const expensesSummaryUI = (expense: MonthlySalesAndExpensesInterface) => {
       return (
          <>
-            <Alert severity='info'>Gastos</Alert>
-            {expense.sortedExpenses.map((exp) => (
-               <Typography
-                  key={exp.currencyKey}
-                  variant='h5'
-                  component='div'
-                  color='inherit'
-               >
-                  {numberFormat(
-                     exp.items.reduce((a, b) => a + b.price, 0),
-                     exp.currencyKey
-                  )}
-               </Typography>
-            ))}
+            <Alert severity='error'>
+               Gastos:
+               {expense.sortedExpenses.map((exp) => (
+                  <Typography
+                     key={exp.currencyKey}
+                     variant='h5'
+                     component='div'
+                     color='inherit'
+                  >
+                     {currencyFormat(
+                        exp.items.reduce((a, b) => a + b.price, 0),
+                        exp.currencyKey
+                     )}
+                  </Typography>
+               ))}
+            </Alert>
          </>
       );
    };
@@ -114,13 +116,18 @@ export const MonthlySales = ({
                         </Typography>
 
                         {x.areAllCurrenciesCOP && x.revenue ? (
-                           <Typography
-                              variant='h5'
-                              component='div'
-                              color={x.revenue < 0 ? 'red' : 'inherit'}
+                           <Alert
+                              severity={x.revenue < 0 ? 'error' : 'success'}
                            >
-                              {numberFormat(x.revenue)}
-                           </Typography>
+                              {x.revenue < 0 ? 'Gastos' : 'Ganancias'}
+                              <Typography
+                                 variant='h5'
+                                 component='div'
+                                 color='inherit'
+                              >
+                                 {currencyFormat(x.revenue, undefined, true)}
+                              </Typography>
+                           </Alert>
                         ) : (
                            <>{expensesSummaryUI(x)}</>
                         )}
@@ -137,10 +144,20 @@ export const MonthlySales = ({
                            </Typography>
                         )}
                         <>
-                           <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-                              {numberFormat(x.revenueWithoutExpenses)}{' '}
-                              excluyendo gastos.
-                           </Typography>
+                           {x.revenueWithoutExpenses === 0 ? (
+                              <Alert severity='info'>
+                                 No se registran ventas en el mes.
+                              </Alert>
+                           ) : (
+                              <Typography
+                                 sx={{ mb: 1.5 }}
+                                 color='text.secondary'
+                              >
+                                 {currencyFormat(x.revenueWithoutExpenses)}{' '}
+                                 excluyendo gastos.
+                              </Typography>
+                           )}
+
                            <List
                               sx={{
                                  width: '100%',
@@ -151,10 +168,7 @@ export const MonthlySales = ({
                               ))}
                            </List>
                            {!x.areAllCurrenciesCOP ? (
-                              <Alert severity='warning'>
-                                 No se puede sumar los gastos del mes debido a
-                                 que hay diferentes divisas.
-                              </Alert>
+                              <Alert severity='info'>Diferentes divisas.</Alert>
                            ) : (
                               <>
                                  <Typography
@@ -162,7 +176,7 @@ export const MonthlySales = ({
                                     color='text.secondary'
                                  >
                                     Suma de los gastos:{' '}
-                                    {numberFormat(Math.abs(x.expenses))}
+                                    {currencyFormat(Math.abs(x.expenses))}
                                  </Typography>
                               </>
                            )}
