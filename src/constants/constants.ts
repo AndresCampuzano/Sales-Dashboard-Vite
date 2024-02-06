@@ -42,6 +42,11 @@ export const COLORS = [
       color: '#d272d5',
    },
    {
+      label: 'Negro',
+      color: '#070707',
+      textColor: '#fafafa',
+   },
+   {
       label: 'Otro',
       color: '#a6a6a6',
       textColor: '#ffffff',
