@@ -22,28 +22,29 @@ const months = [
 export function sortArrayByMonthAndYear<T>(arr: T[]): T[] {
    /**
     * Custom comparator function to compare two objects based on their "month" property.
-    * @returns {number} - A negative, zero, or positive number indicating the sorting order.
     */
-   const compareObjects = (obj1: unknown, obj2: unknown): number => {
+   const compareDates = (a: unknown, b: unknown) => {
       // FIXME: Fix types
-      
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const [month1, year1] = obj1.month.split(' ');
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const [month2, year2] = obj2.month.split(' ');
 
-      // Compare years first
-      if (year1 !== year2) {
-         return Number(year1) - Number(year2);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const aMonth = months.indexOf(a.month.split(' ')[0]);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const bMonth = months.indexOf(b.month.split(' ')[0]);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+
+      const aYear = parseInt(a.month.split(' ')[1]);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const bYear = parseInt(b.month.split(' ')[1]);
+
+      if (aYear !== bYear) {
+         return bYear - aYear;
+      } else {
+         return bMonth - aMonth;
       }
-
-      // If years are the same, compare months
-      const monthIndex1 = months.indexOf(month1);
-      const monthIndex2 = months.indexOf(month2);
-
-      return monthIndex2 - monthIndex1;
    };
-   return arr.sort(compareObjects);
+   return arr.sort(compareDates);
 }

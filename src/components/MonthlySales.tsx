@@ -27,7 +27,7 @@ export const MonthlySales = ({
    sales: SalesDataTable[];
    expenses: ExpenseInterface[];
 }) => {
-   const [salesState, salesDataState] = useState<
+   const [salesState, setSalesData] = useState<
       MonthlySalesAndExpensesInterface[]
    >([]);
    // Alert
@@ -38,14 +38,14 @@ export const MonthlySales = ({
          sales,
          expenses,
       });
-      salesDataState(salesWithExpenses);
+      setSalesData(salesWithExpenses);
    }, [sales, expenses]);
 
    /**
     * By a given month and year, returns the month and year in spanish
     * @example "January 2021" -> "Enero 2021"
     */
-   function localizeMonth(monthString: string): string {
+   function localizeMonthInUI(monthString: string): string {
       const dateTime = DateTime.fromFormat(monthString, 'MMMM yyyy');
       const localizedMonth = dateTime.setLocale('es').toFormat('MMMM yyyy');
       return localizedMonth.charAt(0).toUpperCase() + localizedMonth.slice(1);
@@ -139,7 +139,7 @@ export const MonthlySales = ({
                            color='text.secondary'
                            gutterBottom
                         >
-                           {localizeMonth(x.month)}
+                           {localizeMonthInUI(x.month)}
                         </Typography>
 
                         {expensesSummaryUI(x)}
