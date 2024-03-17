@@ -74,6 +74,15 @@ export const MonthlySales = ({
       setOpenAlert(false);
    };
 
+   // Sorting the array by created_at property
+   const sortByCreatedAt = (array: ExpenseInterface[]) => {
+      return array.sort((a, b) => {
+         const dateA = new Date(a.created_at as string).getTime();
+         const dateB = new Date(b.created_at as string).getTime();
+         return dateB - dateA;
+      });
+   };
+
    const expensesSummaryUI = (expense: MonthlySalesAndExpensesInterface) => {
       const expenseWithCurrency = expense.sortedExpenses.find(
          (exp) => exp.currencyKey === CURRENCIES[0].value
@@ -176,7 +185,7 @@ export const MonthlySales = ({
                                  width: '100%',
                               }}
                            >
-                              {x.allExpenses.map((y) => (
+                              {sortByCreatedAt(x.allExpenses).map((y) => (
                                  <ExpenseItem item={y} key={y._id} />
                               ))}
                            </List>

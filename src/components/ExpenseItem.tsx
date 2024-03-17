@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
 import { ExpenseInterface } from '../types/types.ts';
+import { DateTime } from 'luxon';
 
 export const ExpenseItem = ({ item }: { item: ExpenseInterface }) => {
    const navigate = useNavigate();
@@ -26,7 +27,14 @@ export const ExpenseItem = ({ item }: { item: ExpenseInterface }) => {
          </ListItemAvatar>
          <ListItemText
             primary={item.name}
-            secondary={'- ' + currencyFormat(item.price, item.currency)}
+            secondary={
+               '- ' +
+               currencyFormat(item.price, item.currency) +
+               ', ' +
+               DateTime.fromISO(item.created_at as string)
+                  .setLocale('es')
+                  .toFormat('cccc dd LLL')
+            }
          />
          <IconButton
             edge='end'
