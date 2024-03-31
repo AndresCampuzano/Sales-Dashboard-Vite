@@ -45,7 +45,7 @@ export const ItemForm = () => {
    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
    // Form states
    const [name, setName] = useState<string>('');
-   const [price, setPrice] = useState<number>(20000);
+   const [price, setPrice] = useState<number>(120000);
    const [image, setImage] = useState<string>('');
    const [availableColors, setAvailableColors] = useState<ColorOption[]>([]);
 

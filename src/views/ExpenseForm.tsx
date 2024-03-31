@@ -48,7 +48,7 @@ export const ExpenseForm = () => {
    // Form states
    const [name, setName] = useState<string>('');
    const [type, setType] = useState<string>('');
-   const [price, setPrice] = useState<number>(20000);
+   const [price, setPrice] = useState<number>(23800);
    const [currency, setCurrency] = useState<string>('');
    const [description, setDescription] = useState<string>('');
 

@@ -1,4 +1,7 @@
-import { SalesDataTable, SaleWithClientAndItemData } from '../types/types.ts';
+import type {
+   SalesDataTable,
+   SaleWithClientAndItemData,
+} from '../types/types.ts';
 
 export const prepareDataSales = (
    data: SaleWithClientAndItemData[]
@@ -24,6 +27,7 @@ export const prepareDataSales = (
       totalProducts: sale.items.length,
       totalPrice: sale.items.reduce((acc, item) => acc + (item?.price || 0), 0),
       city: sale.client.city,
+      department: sale.client.department,
       date: sale.created_at as string,
       isRecurrence: sale.total_sales.length > 1,
       totalSales: sale.total_sales,
